@@ -1,5 +1,4 @@
 import os
-
 from flask import Flask
 from flask_cors import CORS
 from flask_marshmallow import Marshmallow
@@ -25,5 +24,6 @@ def create_app():
   app.config["Access-Control-Allow-Origin"] = "*"
   app.config["Access-Control-Allow-Headers"] = "Content-Type"
 
+  from src.app.models import country , state , city, product_categories 
 
   return app
