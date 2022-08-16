@@ -15,6 +15,19 @@ class State(DB.Model):
       self.country_id = country_id
       self.name = name
       self.initials = initials
+    
+    @classmethod
+    def seed(cls, country_id, name, initials):
+        state = State(
+            country_id=country_id,
+            name=name,
+            initials=initials
+        )
+        state.save()
+    
+    def save(self):
+        DB.session.add(self)
+        DB.session.commit()
 
 class StateSchema(MA.Schema):
     class Meta: 
