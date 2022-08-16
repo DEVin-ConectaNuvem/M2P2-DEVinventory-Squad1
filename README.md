@@ -73,4 +73,3 @@ Somos os DEVinSanes, time de desenvolvedores full-stak, desenvolvemos o projeto 
 <li><a href="https://flask.palletsprojects.com/en/2.2.x/" target="_blank">Flask</a></li>
 <li><a href="https://python-poetry.org/docs/" target="_blank">Poetry</a></li>
   </ul>
-
