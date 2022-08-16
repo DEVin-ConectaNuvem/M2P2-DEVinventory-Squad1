@@ -1,5 +1,5 @@
 from src.app import DB, MA
-
+#from src.app.models import City, Gender, Role
 
 class User(DB.Model):
     __tablename__ = 'users'
@@ -8,8 +8,8 @@ class User(DB.Model):
     #gender_id = DB.Column(DB.Integer, DB.ForeignKey(Gender.id), nullable = False)
     #role_id = DB.Column(DB.Integer, DB.ForeignKey(Role.id), nullable = False)
     name = DB.Column(DB.String(128), nullable = False)
-    age = DB.Column(DB.Integer, nullable = False)
-    email = DB.Column(DB.String(128), nullable = False)
+    age = DB.Column(DB.Datetime, nullable = False)
+    email = DB.Column(DB.String(128), unique=True, nullable = False)
     phone = DB.Column(DB.String(128), nullable = False)
     password = DB.Column(DB.String(84), nullable = False)
     cep = DB.Column(DB.String(9), nullable=False)
