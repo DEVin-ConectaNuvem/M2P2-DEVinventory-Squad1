@@ -1,6 +1,5 @@
-from state import Country
-
 from src.app import DB, MA
+from src.app.models.country import Country
 
 
 class State(DB.Model):

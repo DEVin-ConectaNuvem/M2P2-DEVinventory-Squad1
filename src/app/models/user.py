@@ -1,8 +1,7 @@
-from city import City
-from gender import Gender
-from role import Role
-
 from src.app import DB, MA
+from src.app.models.city import City
+from src.app.models.gender import Gender
+from src.app.models.role import Role
 
 
 class User(DB.Model):
@@ -46,7 +45,7 @@ class User(DB.Model):
 
 class UserSchema(MA.Schema):
     class Meta: 
-        fields = ('id', 'name', 'age', 'email', "phone", 'password', "cep", "street", "disctict", "complement", "landmark", 'number_street')
+        fields = ('id', 'city_id', 'gender_id', 'role_id', 'name', 'age', 'email', "phone", 'password', "cep", "street", "disctict", "complement", "landmark", 'number_street')
 
 user_share_schema = UserSchema()
 users_share_schema = UserSchema(many = True)
