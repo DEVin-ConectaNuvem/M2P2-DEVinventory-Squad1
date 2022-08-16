@@ -4,7 +4,7 @@ from src.app import DB, MA
 class Inventory(DB.Model):
   __tablename__ = "inventory"
   id = DB.Column(DB.Integer, autoincrement=True, primary_key=True)
-  # product_category_id = DB.Column(DB.Integer, DB.ForeignKey("product_category.id"))
+  product_category_id = DB.Column(DB.Integer, DB.ForeignKey("product_category.id"))
   user_id = DB.Column(DB.Integer, DB.ForeignKey("user.id"))
   title = DB.Column(DB.String(255), nullable=False)
   product_code = DB.Column(DB.Integer, autoincrement=True, nullable=False, unique=True)

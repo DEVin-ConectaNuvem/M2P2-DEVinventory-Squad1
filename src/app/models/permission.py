@@ -7,7 +7,6 @@ class Permission(DB.Model):
     description = DB.Column(DB.String(128), nullable = False)
 
     def __init__(self, id, description):  
-      self.id = id
       self.description = description
 
 class PermissionSchema(MA.Schema):
