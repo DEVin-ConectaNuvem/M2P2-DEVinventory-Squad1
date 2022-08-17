@@ -8,6 +8,18 @@ class Gender(DB.Model):
 
     def __init__(self, name):  
       self.name = name
+    
+    @classmethod
+    def seed(cls, name):
+        gender = Gender(
+            name=name
+        )
+        gender.save()
+        return gender
+    
+    def save(self):
+        DB.session.add(self)
+        DB.session.commit()
 
 class GenderSchema(MA.Schema):
     class Meta: 
