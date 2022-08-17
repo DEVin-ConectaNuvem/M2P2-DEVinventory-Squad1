@@ -12,7 +12,6 @@ class Role(DB.Model):
     id = DB.Column(DB.Integer, autoincrement = True, primary_key = True)
     description = DB.Column(DB.String(128), nullable = False)
     name =  DB.Column(DB.String(128), nullable = False)
-
     permissions = DB.relationship('Permission', secondary = roles_permissions, backref= 'roles')
 
     def __init__(self, name, description, permissions):
@@ -27,7 +26,12 @@ class Role(DB.Model):
             description= description,
             permissions=permissions
         )
-
+        role.save()
+        return role
+    
+    def save(self):
+        DB.session.add(self)
+        DB.session.commit()
 
 class RoleSchema(MA.Schema):
     permissions = MA.Nested(Permissions_share_schema)

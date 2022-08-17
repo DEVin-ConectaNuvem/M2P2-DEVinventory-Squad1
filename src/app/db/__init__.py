@@ -1,6 +1,8 @@
+import requests
+
 from flask import json
 from sqlalchemy.sql.expression import func
-import requests
+
 from src.app.models.city import City, citys_share_schema
 from src.app.models.country import Country, country_share_schema
 from src.app.models.state import State, states_share_schema
@@ -11,13 +13,12 @@ from src.app.models.gender import Gender, genders_share_schema
 
 
 #Populando o banco com API externa
-def populate_db():
+def populate_db_country():
     country = Country.query.first()
-
-    if country != None:
-        print('Já existe dados populados.')
-        return
-
+    if country == None:
+        Country.seed('Brazil' , 'Português')
+       
+def populate_db_states_cities_users():
     brasil_code = 76
     countries_data = requests.get(f"https://servicodados.ibge.gov.br/api/v1/localidades/paises/{brasil_code}")
     states_data = requests.get("https://servicodados.ibge.gov.br/api/v1/localidades/estados")
@@ -115,3 +116,9 @@ def populate_db():
             None,
             user['location']['street']['number'],
         )
+
+
+# Função final que vai chamar as demais funções de inserção de dados
+def populate_db():
+    populate_db_country()
+    populate_db_states_cities_users()

@@ -1,5 +1,5 @@
-from state import State
 from src.app import DB, MA
+from src.app.models.state import State
 
 
 class City(DB.Model):
@@ -7,7 +7,6 @@ class City(DB.Model):
     id = DB.Column(DB.Integer, autoincrement = True, primary_key = True)
     state_id = DB.Column(DB.Integer, DB.ForeignKey(State.id), nullable = False)
     name = DB.Column(DB.String(128), nullable = False)
-
     state = DB.relationship("State", foreign_keys=[state_id])
 
     def __init__(self, state_id, name):
@@ -17,15 +16,15 @@ class City(DB.Model):
     @classmethod
     def seed(cls, state_id, name):
         city = City(
-        state_id = state_id,
-        name = name
+          state_id = state_id,
+          name = name
         )
         city.save()
-
-    def save(self): 
+        return city
+    
+    def save(self):
         DB.session.add(self)
         DB.session.commit()
-
 
 class CitySchema(MA.Schema):
     class Meta: 
