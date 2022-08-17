@@ -11,7 +11,7 @@ class User(DB.Model):
     gender_id = DB.Column(DB.Integer, DB.ForeignKey(Gender.id), nullable = False)
     role_id = DB.Column(DB.Integer, DB.ForeignKey(Role.id), nullable = False)
     name = DB.Column(DB.String(128), nullable = False)
-    age = DB.Column(DB.Datetime, nullable = False)
+    age = DB.Column(DB.DateTime, nullable = False)
     email = DB.Column(DB.String(128), unique=True, nullable = False)
     phone = DB.Column(DB.String(128), nullable = False)
     password = DB.Column(DB.String(84), nullable = False)
@@ -42,6 +42,31 @@ class User(DB.Model):
       self.complement = complement
       self.landmark = landmark
       self.number_street = number_street
+    
+    @classmethod
+    def seed(cls, city_id, gender_id, role_id,  name, age, email, phone, password, cep, street, district, complement, landmark, number_street):
+        user = User(
+            city_id=city_id,
+            gender_id=gender_id,
+            role_id=role_id,
+            name=name,
+            age=age,
+            email=email,
+            phone=phone,
+            password=password,
+            cep=cep,
+            street=street,
+            district=district,
+            complement=complement,
+            landmark=landmark,
+            number_street=number_street
+        )
+        user.save()
+        return user
+    
+    def save(self):
+        DB.session.add(self)
+        DB.session.commit()
 
 class UserSchema(MA.Schema):
     class Meta: 
