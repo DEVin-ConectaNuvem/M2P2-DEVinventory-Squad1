@@ -43,7 +43,7 @@ poetry/core/*
 .env
 .vscode
 client_secret.json
-
+src/app/migrations
 src/app/migrations/alembic.ini
 src/app/migrations/env.py
 src/app/migrations/README
