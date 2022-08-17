@@ -1,4 +1,4 @@
-from state import State
+from src.app.models.state import State
 
 from src.app import DB, MA
 

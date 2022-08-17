@@ -11,7 +11,7 @@ class User(DB.Model):
     gender_id = DB.Column(DB.Integer, DB.ForeignKey(Gender.id), nullable = False)
     role_id = DB.Column(DB.Integer, DB.ForeignKey(Role.id), nullable = False)
     name = DB.Column(DB.String(128), nullable = False)
-    age = DB.Column(DB.Datetime, nullable = False)
+    age = DB.Column(DB.DateTime, nullable = False)
     email = DB.Column(DB.String(128), unique=True, nullable = False)
     phone = DB.Column(DB.String(128), nullable = False)
     password = DB.Column(DB.String(84), nullable = False)
