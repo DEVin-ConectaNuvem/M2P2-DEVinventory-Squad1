@@ -43,3 +43,8 @@ poetry/core/*
 .env
 .vscode
 client_secret.json
+src/app/migrations/alembic.ini
+src/app/migrations/env.py
+src/app/migrations/README
+src/app/migrations/script.py.mako
+src/app/migrations/versions/51c99e43c2d1_.py
