@@ -27,7 +27,7 @@ class Role(DB.Model):
 
 class RoleSchema(MA.Schema):
     class Meta: 
-        fields = ('id', 'description')
+        fields = ('id', 'description', 'name')
 
 role_share_schema = RoleSchema()
 roles_share_schema = RoleSchema(many = True)
