@@ -15,7 +15,7 @@ class User(DB.Model):
     email = DB.Column(DB.String(128), unique=True, nullable = False)
     phone = DB.Column(DB.String(128), nullable = False)
     password = DB.Column(DB.String(84), nullable = False)
-    cep = DB.Column(DB.String(9), nullable=False)
+    cep = DB.Column(DB.Integer, nullable=False)
     street = DB.Column(DB.String(128), nullable=False)
     district = DB.Column(DB.String(128), nullable=False)
     complement = DB.Column(DB.String(64), nullable=True)

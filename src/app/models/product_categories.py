@@ -1,5 +1,6 @@
 from src.app import DB, MA
 
+
 class Product_Categories(DB.Model):
     __tablename__ = 'product_categories'
     id = DB.Column(DB.Integer, autoincrement=True, primary_key=True)

@@ -16,7 +16,7 @@ def create_app():
 
   app = Flask(__name__)
 
-  from src.app.models import role, gender, permission, country, state, city, product_categories, inventory, user
+  
 
   app.config.from_object(app_config[os.getenv('FLASK_ENV')])
   DB.init_app(app)
@@ -26,7 +26,8 @@ def create_app():
   CORS(app)
   app.config["Access-Control-Allow-Origin"] = "*"
   app.config["Access-Control-Allow-Headers"] = "Content-Type"
-  from src.app.models import country
 
-
+  from src.app.models import (city, country, gender, inventory, permission,
+                              product_categories, role, state, user)
+  
   return app
