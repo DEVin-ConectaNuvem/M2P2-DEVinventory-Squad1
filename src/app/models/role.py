@@ -8,6 +8,18 @@ class Role(DB.Model):
 
     def __init__(self, description):  
       self.description = description
+    
+    @classmethod
+    def seed(cls, description):
+        role = Role(
+            description=description
+        )
+        role.save()
+        return role
+    
+    def save(self):
+        DB.session.add(self)
+        DB.session.commit()
 
 class RoleSchema(MA.Schema):
     class Meta: 
