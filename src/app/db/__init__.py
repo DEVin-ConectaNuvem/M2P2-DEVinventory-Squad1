@@ -21,3 +21,4 @@ def populate_db_user():
 # Função final que vai chamar as demais funções de inserção de dados
 def populate_db():
     populate_db_country()
+    populate_db_user()
