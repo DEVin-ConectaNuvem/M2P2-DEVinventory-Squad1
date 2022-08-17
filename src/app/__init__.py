@@ -5,6 +5,7 @@ from flask_cors import CORS
 from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 
 from src.app.config import app_config
 from src.app.swagger import create_swagger
@@ -27,6 +28,9 @@ def create_app():
   app.config["Access-Control-Allow-Origin"] = "*"
   app.config["Access-Control-Allow-Headers"] = "Content-Type"
   from src.app.models import country
+  CORS(app)
+  app.config['Access-Control-Allow-Origin'] = '*'
+  app.config["Access-Control-Allow-Headers"]="Content-Type"
 
 
   return app
