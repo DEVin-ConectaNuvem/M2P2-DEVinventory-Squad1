@@ -24,6 +24,7 @@ def create_app():
   CORS(app)
   app.config["Access-Control-Allow-Origin"] = "*"
   app.config["Access-Control-Allow-Headers"] = "Content-Type"
+  from src.app.models import country
 
 
   return app

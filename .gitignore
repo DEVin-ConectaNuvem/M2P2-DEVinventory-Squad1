@@ -43,3 +43,4 @@ poetry/core/*
 .env
 .vscode
 client_secret.json
+src/app/migrations
