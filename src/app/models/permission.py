@@ -8,6 +8,18 @@ class Permission(DB.Model):
 
     def __init__(self, id, description):  
       self.description = description
+    
+    @classmethod
+    def seed(cls, description):
+        permission = Permission(
+            description=description
+        )
+        permission.save()
+        return permission
+    
+    def save(self):
+        DB.session.add(self)
+        DB.session.commit()
 
 class PermissionSchema(MA.Schema):
     class Meta: 
