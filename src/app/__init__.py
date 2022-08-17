@@ -16,6 +16,8 @@ def create_app():
 
   app = Flask(__name__)
 
+  from src.app.models import role, gender, permission, country, state, city, product_categories, inventory, user
+
   app.config.from_object(app_config[os.getenv('FLASK_ENV')])
   DB.init_app(app)
   MA.init_app(app)
