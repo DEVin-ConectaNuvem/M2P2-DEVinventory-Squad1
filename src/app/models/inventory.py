@@ -1,11 +1,13 @@
 from src.app import DB, MA
+from src.app.models.product_categories import Product_Categories
+from src.app.models.user import User
 
 
 class Inventory(DB.Model):
   __tablename__ = "inventory"
   id = DB.Column(DB.Integer, autoincrement=True, primary_key=True)
-  product_category_id = DB.Column(DB.Integer, DB.ForeignKey("product_category.id"))
-  user_id = DB.Column(DB.Integer, DB.ForeignKey("user.id"))
+  product_category_id = DB.Column(DB.Integer, DB.ForeignKey(Product_Categories.id), nullable=False)
+  user_id = DB.Column(DB.Integer, DB.ForeignKey(User.id), nullable=True)
   title = DB.Column(DB.String(255), nullable=False)
   product_code = DB.Column(DB.Integer, autoincrement=True, nullable=False, unique=True)
   value = DB.Column(DB.float, nullable=False)
