@@ -33,5 +33,5 @@ class StateSchema(MA.Schema):
     class Meta: 
         fields = ('id', 'country_id', 'name', 'initials')
 
-State_share_schema = StateSchema()
-States_share_schema = StateSchema(many = True)
+state_share_schema = StateSchema()
+states_share_schema = StateSchema(many = True)
