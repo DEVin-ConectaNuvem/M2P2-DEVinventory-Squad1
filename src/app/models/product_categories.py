@@ -11,11 +11,11 @@ class Product_Categories(DB.Model):
 
     @classmethod
     def seed(cls , name):
-        product_categorie = Product_Categories(
+        product_categories = Product_Categories(
             name = name ,
             )
-        product_categorie.save()
-        return product_categorie
+        product_categories.save()
+        return product_categories
     
     def save(self):
         DB.session.add(self)
@@ -26,5 +26,5 @@ class Product_CategoriesSchema(MA.Schema):
         fields = ['id' , 'name']
 
 
-product_categorie_share_schema = Product_CategoriesSchema()
-product_categorie_share_schema = Product_CategoriesSchema(many = True)
+product_category_share_schema = Product_CategoriesSchema()
+product_categories_share_schema = Product_CategoriesSchema(many = True)

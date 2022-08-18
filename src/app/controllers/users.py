@@ -31,4 +31,3 @@ def logout():
       status=202,
       mimetype='application/json'
     )
-  

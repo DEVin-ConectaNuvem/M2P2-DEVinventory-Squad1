@@ -27,7 +27,7 @@ def create_app():
   app.config["Access-Control-Allow-Origin"] = "*"
   app.config["Access-Control-Allow-Headers"] = "Content-Type"
 
-  from src.app.models import (city, country, gender, inventory, permission,
-                              product_categories, role, state, user)
+  from src.app.models import (country, state , city, gender, inventory, permission,
+                              product_categories, role, user)
   
   return app
