@@ -108,4 +108,3 @@ def populate_db():
     populate_db_gender()
     populate_db_permission()
     populate_db_product_category()
-
