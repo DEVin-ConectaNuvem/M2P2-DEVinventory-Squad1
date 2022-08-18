@@ -24,7 +24,7 @@ def login():
   if "error" in response:
     return Response(
       response=json.dumps({"error": response['error']}),
-      status=response['status_code'],
+      status=401,
       mimetype='application/json'
     )
 
