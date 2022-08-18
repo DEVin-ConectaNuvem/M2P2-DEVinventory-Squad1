@@ -1,5 +1,5 @@
 from src.app import DB, MA
-from src.app.models.permission import Permission_share_schema
+from src.app.models.permission import permission_share_schema
 
 roles_permissions = DB.Table("roles_permissions",
     DB.Column("role_id", DB.Integer, DB.ForeignKey("roles.id")),
@@ -10,9 +10,9 @@ class Role(DB.Model):
     id = DB.Column(DB.Integer, autoincrement = True, primary_key = True)
     description = DB.Column(DB.String(128), nullable = False)
     name = DB.Column(DB.String(128), nullable = False)
+    
     permissions = DB.relationship("Permission", secondary=roles_permissions, backref="roles")
     
-
     def __init__(self, description, name):  
       self.description = description
       self.name = name
@@ -31,9 +31,9 @@ class Role(DB.Model):
         DB.session.commit()
 
 class RoleSchema(MA.Schema):
-    permissions = MA.Nested(Permission_share_schema)
+    permissions = MA.Nested(permission_share_schema)
     class Meta: 
-        fields = ('id', 'description', 'name', "permissions")
+        fields = ('id', 'description', 'name')
 
 role_share_schema = RoleSchema()
 roles_share_schema = RoleSchema(many = True)
