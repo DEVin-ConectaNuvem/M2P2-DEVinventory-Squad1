@@ -1,12 +1,9 @@
 import click
 from flask.cli import with_appcontext
 
-from src.app import create_app
+from src.app import DB, create_app
 from src.app.db import populate_db
-from src.app import DB
-
 from src.app.routes import routes
-
 
 app = create_app()
 routes(app)

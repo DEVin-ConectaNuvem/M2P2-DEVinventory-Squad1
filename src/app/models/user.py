@@ -1,8 +1,9 @@
+import bcrypt
+
 from src.app import DB, MA
 from src.app.models.city import City, city_share_schema
 from src.app.models.gender import Gender, gender_share_schema
 from src.app.models.role import Role
-import bcrypt
 
 
 class User(DB.Model):

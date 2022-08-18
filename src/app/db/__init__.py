@@ -1,16 +1,16 @@
 import requests
 from sqlalchemy.sql.expression import func
 
-from src.app.utils import is_table_empty
-
-from src.app.models.country import Country, country_share_schema
-from src.app.models.state import State, states_share_schema
 from src.app.models.city import City, cities_share_schema
+from src.app.models.country import Country, country_share_schema
 from src.app.models.gender import Gender, genders_share_schema
+from src.app.models.inventory import Inventory, inventories_share_schema
 from src.app.models.permission import Permission, permissions_share_schema
-from src.app.models.product_categories import Product_Categories, product_categories_share_schema
+from src.app.models.product_categories import (Product_Categories,
+                                               product_categories_share_schema)
 from src.app.models.role import Role, roles_share_schema
-from src.app.models.inventory import Inventory, roles_share_schema
+from src.app.models.state import State, states_share_schema
+from src.app.utils import is_table_empty
 
 # inventory , user , role
 

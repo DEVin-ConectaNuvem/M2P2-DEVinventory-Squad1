@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
-from src.app.utils import generate_jwt
 
 from src.app.models.user import User, user_share_schema
+from src.app.utils import generate_jwt
 
 
 def login_user(email, password):
