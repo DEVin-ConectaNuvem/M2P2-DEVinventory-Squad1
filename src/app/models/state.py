@@ -9,7 +9,7 @@ class State(DB.Model):
     name = DB.Column(DB.String(128), nullable = False)
     initials = DB.Column(DB.String(2), nullable=False)
 
-    country = DB.relationship("country", foreign_keys=[country_id])
+    country = DB.relationship("Country", foreign_keys=[country_id])
 
     def __init__(self, country_id, name, initials):
       self.country_id = country_id
@@ -33,5 +33,5 @@ class StateSchema(MA.Schema):
     class Meta: 
         fields = ('id', 'country_id', 'name', 'initials')
 
-State_share_schema = StateSchema()
-States_share_schema = StateSchema(many = True)
+state_share_schema = StateSchema()
+states_share_schema = StateSchema(many = True)
