@@ -24,3 +24,4 @@ def login_user(email, password):
 
   except:
     return { "error": "Algo deu errado!", "status_code": 500 }
+
