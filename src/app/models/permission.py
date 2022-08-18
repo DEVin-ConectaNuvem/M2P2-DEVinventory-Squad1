@@ -25,5 +25,5 @@ class PermissionSchema(MA.Schema):
     class Meta: 
         fields = ('id', 'description')
 
-Permission_share_schema = PermissionSchema()
-Permissions_share_schema = PermissionSchema(many = True)
+permission_share_schema = PermissionSchema()
+permissions_share_schema = PermissionSchema(many = True)

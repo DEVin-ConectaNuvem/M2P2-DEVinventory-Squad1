@@ -32,4 +32,4 @@ class CitySchema(MA.Schema):
         fields = ('id', 'description', "state")
 
 city_share_schema = CitySchema()
-citys_share_schema = CitySchema(many = True)
+cities_share_schema = CitySchema(many = True)
