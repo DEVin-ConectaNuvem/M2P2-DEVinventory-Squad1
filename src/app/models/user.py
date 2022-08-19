@@ -13,13 +13,13 @@ class User(DB.Model):
     gender_id = DB.Column(DB.Integer, DB.ForeignKey(Gender.id), nullable = False)
     role_id = DB.Column(DB.Integer, DB.ForeignKey(Role.id), nullable = False)
     name = DB.Column(DB.String(128), nullable = False)
-    age = DB.Column(DB.DateTime, nullable = False)
+    age = DB.Column(DB.DateTime, nullable = True)
     email = DB.Column(DB.String(128), unique=True, nullable = False)
-    phone = DB.Column(DB.String(128), nullable = False)
-    password = DB.Column(DB.String(84), nullable = False)
-    cep = DB.Column(DB.Integer, nullable=False)
-    street = DB.Column(DB.String(128), nullable=False)
-    district = DB.Column(DB.String(128), nullable=False)
+    phone = DB.Column(DB.String(128), nullable = True)
+    password = DB.Column(DB.String(84), nullable = True)
+    cep = DB.Column(DB.Integer, nullable=True)
+    street = DB.Column(DB.String(128), nullable=True)
+    district = DB.Column(DB.String(128), nullable=True)
     complement = DB.Column(DB.String(64), nullable=True)
     landmark = DB.Column(DB.String(64), nullable=True)
     number_street = DB.Column(DB.Integer, nullable=True) 
@@ -49,7 +49,7 @@ class User(DB.Model):
         return bcrypt.checkpw(password.encode("utf-8"), self.password.encode("utf-8"))
     
     @classmethod
-    def seed(cls, city_id, gender_id, role_id,  name, age, email, phone, password, cep, street, district, complement, landmark, number_street):
+    def seed(cls, city_id, gender_id, role_id,  name, age, email, phone, password, cep, street, district, complement=None, landmark=None, number_street=None):
         user = User(
             city_id=city_id,
             gender_id=gender_id,

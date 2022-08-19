@@ -38,14 +38,14 @@ def create_user(
             cep,
             street,
             district,
-            complement,
-            landmark,
-            number_street,):
+            complement=None,
+            landmark=None,
+            number_street=None,):
       try:
         if roles == None:
           roles = "HELPER"
 
-        roles_query = Role.query.filter_by(description = roles).all()
+        #roles_query = Role.query.filter_by(description = roles).all()
 
         User.seed(
             city_id,

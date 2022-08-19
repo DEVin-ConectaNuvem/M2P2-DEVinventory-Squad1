@@ -3,7 +3,7 @@ import requests
 from flask import Blueprint, current_app, request
 from flask.globals import session
 from flask.wrappers import Response
-from src.app.models.user import User
+from src.app.models.user import User, user_share_schema
 from src.app.utils import exist_key, generate_jwt
 from src.app.services.users_service import create_user, login_user, get_user_by_email
 from werkzeug.utils import redirect
@@ -56,7 +56,6 @@ def auth_google():
     authorization_url, state = flow.authorization_url()
     session["state"] = state
 
-    #return json.dumps({"url": authorization_url})
     return Response(
         response=json.dumps({'url':authorization_url}),
         status=200,
@@ -65,13 +64,10 @@ def auth_google():
 
 @user.route('/callback', methods = ["GET"])
 def callback():
-      
       flow.fetch_token(authorization_response = request.url)
       credentials = flow.credentials
-      print(credentials)
       request_session = requests.session()
       token_google = auth.transport.requests.Request(session=request_session)
-      print(token_google)
 
       user_google_dict = id_token.verify_oauth2_token(
         id_token = credentials.id_token,
@@ -79,22 +75,18 @@ def callback():
         audience=current_app.config['GOOGLE_CLIENT_ID']
       )
 
-      print(user_google_dict)
-
       user = get_user_by_email(user_google_dict['email'])
-
-      print(user)
 
       if "error" in user:
         user = User(
           city_id=1,
           gender_id=1,
-          role_id=1,
+          role_id=3,
           name=user_google_dict['name'],
           age="1982-08-21",
           email=user_google_dict['email'],
           phone="048000000000",
-          password="user2022",
+          password="senha",
           cep=88080400,
           street="rua do alho",
           district="Epaminondas",
@@ -104,9 +96,9 @@ def callback():
         )
         DB.session.add(user)
         DB.session.commit()
-    
 
-      print(user)
+        user = user_share_schema.dump(user)
+             
 
       user_google_dict["user_id"] = user['id']
       user_google_dict["roles"] = user['roles']
@@ -117,8 +109,6 @@ def callback():
       del user_google_dict['azp']
 
       token = generate_jwt(user_google_dict)
-
-      print(user_google_dict)
 
       return redirect(f"{current_app.config['FRONTEND_URL']}?jwt={token}")
 
