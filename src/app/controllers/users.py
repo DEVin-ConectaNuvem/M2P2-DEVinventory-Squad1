@@ -14,6 +14,15 @@ from src.app.utils import exist_key, generate_jwt
 
 user = Blueprint('user', __name__, url_prefix="/user")
 
+flow = Flow.from_client_secrets_file(
+  client_secrets_file="src/app/db/client_secret.json",
+  scopes=[
+    "https://www.googleapis.com/auth/userinfo.email",
+    "https://www.googleapis.com/auth/userinfo.profile",
+    "openid"
+  ],
+  redirect_uri = "http://localhost:5000/user/callback"
+)
 
 @user.route('/login', methods = ["POST"])
 def login():
@@ -57,4 +66,74 @@ def logout():
       mimetype='application/json'
 )
   
+@user.route('/create', methods = ["POST"])
+@requires_access_level("WRITE")
+def create():
+  list_keys = ["city_id", "name", "age", "email", "password"]
 
+  data = exist_key(request.get_json(), list_keys)
+
+  roles = None
+
+  if "roles" in data:
+    roles = data['roles']
+  
+  response = create_user(
+    data["city_id"],
+    data["name"],
+    data["age"], 
+    data["email"], 
+    data["password"],
+    roles
+  )
+
+  if "error" in response:
+    return Response(
+      response=json.dumps(response),
+      status=400,
+      mimetype='application/json'
+    )
+
+  return Response(
+    response=json.dumps(response),
+    status=201,
+    mimetype='application/json'
+  )
+
+@user.route('/callback', methods = ["GET"])
+def callback():
+
+  flow.fetch_token(authorization_response = request.url)
+  credentials = flow.credentials
+  request_session = requests.session()
+  token_google = auth.transport.requests.Request(session=request_session)
+
+  user_google_dict = id_token.verify_oauth2_token(
+    id_token = credentials.id_token,
+    request=token_google,
+    audience=current_app.config['GOOGLE_CLIENT_ID']
+  )
+  
+  user = get_user_by_email(user_google_dict['email'])
+
+  if "error" in user:
+    user = create_user(
+      50,
+      user_google_dict['name'],
+      25,
+      user_google_dict['email'],
+      "PASSWORD_DEFAULT",
+      None
+    )
+  
+  user_google_dict["user_id"] = user['id']
+  user_google_dict["roles"] = user['roles']
+
+  session["google_id"] = user_google_dict.get("sub")
+
+  del user_google_dict['aud']
+  del user_google_dict['azp']
+
+  token = generate_jwt(user_google_dict)
+
+  return redirect(f"{current_app.config['FRONTEND_URL']}?jwt={token}")
