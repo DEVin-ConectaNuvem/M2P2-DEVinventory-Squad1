@@ -3,10 +3,10 @@ from flask.cli import with_appcontext
 
 from src.app import DB, create_app
 from src.app.db import populate_db
-# from src.app.routes import routes
+from src.app.routes import routes
 
 app = create_app()
-# routes(app)
+routes(app)
 
 @click.command(name = 'populate_db')
 @with_appcontext

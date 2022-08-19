@@ -31,8 +31,8 @@ class Inventory(DB.Model):
     
     
   @classmethod
-  def seed(cls, product_category_id, user_id, title, product_code, value, brand, template, description):
-    inventory = Inventory(product_category_id , user_id , title, product_code, value, brand, template, description)
+  def seed(cls, user_id, title, product_code, value, brand, template, description):
+    inventory = Inventory(user_id, title, product_code, value, brand, template, description)
     inventory.save()
     return inventory
     
