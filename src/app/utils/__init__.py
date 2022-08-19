@@ -1,5 +1,6 @@
 from flask import current_app
 from jwt import encode
+import random
 
 
 def is_table_empty(query):
@@ -26,3 +27,11 @@ def generate_jwt(payload):
   token = encode(payload, current_app.config["SECRET_KEY"], "HS256")
 
   return token
+
+def random_or_none():
+    factor = random.randint(0 , 10)
+    mod = factor % 2
+    if mod == 0:
+        return None
+    elif mod == 1:
+        return random.randint(1 , 4)
