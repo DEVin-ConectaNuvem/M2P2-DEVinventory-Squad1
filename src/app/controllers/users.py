@@ -22,7 +22,7 @@ flow = Flow.from_client_secrets_file(
     "https://www.googleapis.com/auth/userinfo.profile",
     "openid"
   ],
-  redirect_uri = "http://localhost:5000/user/callback"
+  redirect_uri = "http://localhost:5000/user/auth/google"
 )
 
 @user.route('/login', methods = ["POST"])

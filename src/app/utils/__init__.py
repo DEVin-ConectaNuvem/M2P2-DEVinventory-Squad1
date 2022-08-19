@@ -24,9 +24,9 @@ def exist_key(request_json,list_keys):
     return {"error": f"Está faltando o item {keys_missing}"}
 
 def generate_jwt(payload):
-  token = encode(payload, current_app.config["SECRET_KEY"], "HS256")
+    token = encode(payload, current_app.config["SECRET_KEY"], "HS256")
 
-  return token
+    return token
 
 def random_or_none():
     factor = random.randint(0 , 10)
