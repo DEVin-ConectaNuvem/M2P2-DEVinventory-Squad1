@@ -1,4 +1,4 @@
-import bcrypt
+
 
 from src.app import DB, MA
 from src.app.models.city import City, city_share_schema
@@ -45,9 +45,6 @@ class User(DB.Model):
       self.landmark = landmark
       self.number_street = number_street
     
-    def check_password(self, password):
-        return bcrypt.checkpw(password.encode("utf-8"), self.password.encode("utf-8"))
-    
     @classmethod
     def seed(cls, city_id, gender_id, role_id,  name, age, email, phone, password, cep, street, district, complement=None, landmark=None, number_street=None):
         user = User(
@@ -58,7 +55,7 @@ class User(DB.Model):
             age=age,
             email=email,
             phone=phone,
-            password=User.encrypt_password(password=password),
+            password=password,
             cep=cep,
             street=street,
             district=district,
@@ -68,10 +65,6 @@ class User(DB.Model):
         )
         user.save()
         return user
-
-    @staticmethod
-    def encrypt_password(password):
-        return bcrypt.hashpw(password, bcrypt.gensalt()).decode('utf-8')
     
     def save(self):
         DB.session.add(self)

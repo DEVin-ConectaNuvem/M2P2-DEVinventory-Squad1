@@ -1,6 +1,7 @@
 from flask import current_app
 from jwt import encode
 import random
+import bcrypt
 
 
 def is_table_empty(query):
@@ -35,3 +36,13 @@ def random_or_none():
         return None
     elif mod == 1:
         return random.randint(1 , 4)
+
+
+def encrypt_password(password):
+    return bcrypt.hashpw(password, bcrypt.gensalt()).decode("utf-8")
+
+def check_password(password):
+    return bcrypt.checkpw(password.encode("utf-8"), password.encode("utf-8"))
+
+
+

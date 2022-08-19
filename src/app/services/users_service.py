@@ -2,29 +2,31 @@ from datetime import datetime, timedelta
 
 from src.app.models.role import Role
 from src.app.models.user import User, user_share_schema
-from src.app.utils import generate_jwt
+from src.app.utils import generate_jwt, check_password
 
 
-def login_user(email, password):
-  try:
-    user_query = User.query.filter_by(email = email).first_or_404()
-    user_dict = user_share_schema.dump(user_query)
+def login_user(email, password: str):
+    try:
+        user_query = User.query.filter_by(email = email).first_or_404()
+        user_dict = user_share_schema.dump(user_query)
 
-    if not user_query.check_password(password):
-      return { "error": "Suas credênciais estão incorretas!", "status_code": 401 }
-    
-    payload = {
-      "user_id": user_query.id,
-      "exp": datetime.utcnow() + timedelta(days=1),
-      "roles": user_dict["roles"]
-    }
+        if not check_password(password.encode("utf-8")):
+            return { "error": "Suas credênciais estão incorretas!", "status_code": 401 }
 
-    token = generate_jwt(payload)
+        print("passou aqui")
+        payload = {
+          "user_id": user_query.id,
+          "exp": datetime.utcnow() + timedelta(days=1),
+          "roles": user_dict["roles"]
+        }
 
-    return { "token": token, "status_code": 200 }
+        token = generate_jwt(payload)
 
-  except:
-    return { "error": "Algo deu errado!", "status_code": 500 }
+        return { "token": token, "status_code": 200 }
+
+    except:
+        return { "error": "Algo deu errado!", "status_code": 500 }
+
 
 def create_user(
             city_id,
