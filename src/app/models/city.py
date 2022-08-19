@@ -1,5 +1,5 @@
 from src.app import DB, MA
-from src.app.models.state import State
+from src.app.models.state import State, state_share_schema
 
 
 class City(DB.Model):
@@ -28,6 +28,7 @@ class City(DB.Model):
         DB.session.commit()
 
 class CitySchema(MA.Schema):
+    state = MA.Nested(state_share_schema)
     class Meta: 
         fields = ('id', 'description', "state")
 
