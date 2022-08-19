@@ -74,8 +74,8 @@ def create_user(
 
 def get_user_by_email(email):
   try:
-    user_query = User.query.filter_by(email = email).first_or_404()
-    user_dict = user_share_schema.dump(user_query)
-    return { "id": user_dict['id'], "roles": user_dict["roles"] }
+      user_query = User.query.filter_by(email = email).first_or_404()
+      user_dict = user_share_schema.dump(user_query)
+      return { "id": user_dict['id'], "roles": user_dict["roles"] }
   except:
-    return { "error": "Algo deu errado!", "status_code": 500 }
+      return { "error": "Algo deu errado!", "status_code": 500 }
