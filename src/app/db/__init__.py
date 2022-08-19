@@ -131,7 +131,9 @@ def populate_db_user():
 
 def populate_db_inventory():
         
+
     if is_table_empty(Inventory.query.first()):
+
         products = requests.get('https://fakestoreapi.com/products')
         products = products.json() + products.json()
         for index, product in enumerate(products):
