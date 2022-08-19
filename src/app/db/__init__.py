@@ -12,7 +12,7 @@ from src.app.models.role import Role, roles_share_schema
 from src.app.models.state import State, states_share_schema
 from src.app.models.user import User, users_share_schema
 
-from src.app.utils import is_table_empty
+from src.app.utils import is_table_empty , random_or_none
 
 inventory = [
     {""}
@@ -111,11 +111,19 @@ def populate_db_permission():
                 )
 
 def populate_db_role():
+        permissions = [
+            {"role" : "admin" , "permissions" : Permission.query.all()},
+            {"role" : "fe" , "permissions" : Permission.query.filter(Permission.description.in_(['READ', 'WRITE'])).all()},
+            {"role" : "be" , "permissions" : Permission.query.filter(Permission.description.in_(['READ', 'WRITE'])).all()},
+            {"role" : "coord" , "permissions" : Permission.query.filter(Permission.description.in_(['READ', 'WRITE' , 'UPDATE'])).all()}
+        ]
+        
         if is_table_empty(Role.query.first()):
-            for role in roles:
+            for index , role in enumerate(roles):
                 Role.seed(
                     role['description'],
-                    role['name']
+                    role['name'],
+                    permissions[index]['permissions']
                 )
 
 def populate_db_user():
@@ -130,8 +138,6 @@ def populate_db_user():
 
 
 def populate_db_inventory():
-        
-
     if is_table_empty(Inventory.query.first()):
 
         products = requests.get('https://fakestoreapi.com/products')
@@ -139,7 +145,7 @@ def populate_db_inventory():
         for index, product in enumerate(products):
             Inventory.seed(
                 random.randint(1 , 7),
-                random.randint(1 , 4),
+                random_or_none(),
                 product['title'],
                 index + 1,
                 product['price'],
