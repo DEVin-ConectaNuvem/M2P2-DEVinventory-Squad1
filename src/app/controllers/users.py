@@ -1,14 +1,15 @@
 import json
-
 import requests
-from flask import Blueprint, current_app, jsonify, request
+from flask import Blueprint, current_app, request
 from flask.globals import session
 from flask.wrappers import Response
 from src.app.utils import exist_key, generate_jwt
 from src.app.services.users_service import create_user, login_user, get_user_by_email
-
+from werkzeug.utils import redirect
+from src.app.middlewares.auth import requires_access_level
 from google_auth_oauthlib.flow import Flow
-
+from google import auth 
+from google.oauth2 import id_token 
 from src.app.services.users_service import login_user
 from src.app.utils import exist_key, generate_jwt
 
@@ -80,10 +81,19 @@ def create():
   
   response = create_user(
     data["city_id"],
-    data["name"],
-    data["age"], 
-    data["email"], 
+    data["gender_id"],
+    data["role_id"], 
+    data["name"], 
+    data["age"],
+    data["email"],
+    data["phone"],
     data["password"],
+    data["cep"],
+    data["street"],
+    data["district"],
+    data["complement"],
+    data["landmark"],
+    data["number_street"],
     roles
   )
 
