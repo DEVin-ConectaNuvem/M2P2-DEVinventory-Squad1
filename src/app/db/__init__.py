@@ -1,4 +1,4 @@
-import requests
+import requests , random
 from sqlalchemy.sql.expression import func
 
 from src.app.models.city import City, cities_share_schema
@@ -127,6 +127,25 @@ def populate_db_user():
                 user['complement'], user['landmark'], user['number_street']
             )
 
+
+
+def populate_db_inventory():
+        
+    if is_table_empty(Inventory.query.first())
+        products = requests.get('https://fakestoreapi.com/products')
+        products = products.json() + products.json()
+        for index, product in enumerate(products):
+            Inventory.seed(
+                random.randint(1 , 7),
+                random.randint(1 , 4),
+                product['title'],
+                index + 1,
+                product['price'],
+                'lorem',
+                'ipsum',
+                product['description']
+            )
+
 # Função final que vai chamar as demais funções de inserção de dados
 def populate_db():
     populate_db_country()
@@ -137,3 +156,5 @@ def populate_db():
     populate_db_product_category()
     populate_db_role()
     populate_db_user()
+    populate_db_user()
+    populate_db_inventory()
