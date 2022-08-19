@@ -1,18 +1,21 @@
+from datetime import datetime
+
 from src.app import DB, MA
 from src.app.models.product_categories import Product_Categories
 from src.app.models.user import User
 
 
 class Inventory(DB.Model):
+  
   __tablename__ = "inventories"
   id = DB.Column(DB.Integer, autoincrement=True, primary_key=True)
   product_category_id = DB.Column(DB.Integer, DB.ForeignKey(Product_Categories.id))
   user_id = DB.Column(DB.Integer, DB.ForeignKey(User.id))
-  product_code = DB.Column(DB.Integer, autoincrement=True, nullable=False, unique=True)
+  product_code = DB.Column(DB.Integer, nullable=False, unique=True)
   title = DB.Column(DB.String(255), nullable=False)
   brand = DB.Column(DB.String(255), nullable=False)
   template = DB.Column(DB.String(255), nullable=False)
-  description = DB.Column(DB.String(255), nullable=False)
+  description = DB.Column(DB.String(1000), nullable=False)
   value = DB.Column(DB.Float, nullable=False)
 
   
@@ -26,15 +29,17 @@ class Inventory(DB.Model):
     self.template = template
     self.description = description
     
+    
   @classmethod
-  def seed(cls, user_id, title, product_code, value, brand, template, description):
-    inventory = Inventory(user_id, title, product_code, value, brand, template, description)
+  def seed(cls, product_category_id, user_id, title, product_code, value, brand, template, description):
+    inventory = Inventory(product_category_id , user_id , title, product_code, value, brand, template, description)
     inventory.save()
     return inventory
     
   def save(self):
     DB.session.add(self)
     DB.session.commit()
+    
 
 class InventorySchema(MA.Schema):
     class Meta: 
