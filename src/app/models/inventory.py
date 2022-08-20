@@ -19,6 +19,9 @@ class Inventory(DB.Model):
     template = DB.Column(DB.String(255), nullable=False)
     description = DB.Column(DB.String(1000), nullable=False)
     value = DB.Column(DB.Float, nullable=False)
+    
+    product_category = DB.relationship("Product_Categories", foreign_keys=[product_category_id])
+    user = DB.relationship("User", foreign_keys=[user_id])
 
     @classmethod
     def seed(
@@ -66,12 +69,14 @@ class Inventory(DB.Model):
             "brand": self.brand,
             "template": self.template,
             "description": self.description,
+            "user_name": self.user.name if self.user else 'Na empresa',
+            "user_id": self.user.id if self.user else None,
         }
 
 
 class InventorySchema(MA.Schema):
-    product_category = MA.Nested(product_category_share_schema)
-    user_id = MA.Nested(user_share_schema)
+    product_categories = MA.Nested(product_category_share_schema)
+    user = MA.Nested(user_share_schema)
 
     class Meta:
         fields = (
@@ -84,6 +89,7 @@ class InventorySchema(MA.Schema):
             "brand",
             "template",
             "description",
+            
         )
 
 

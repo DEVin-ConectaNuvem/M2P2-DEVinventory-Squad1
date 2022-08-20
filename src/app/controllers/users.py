@@ -14,6 +14,7 @@ from src.app import DB, MA
 from src.app.utils import exist_key, generate_jwt
 from src.app.middlewares.auth import requires_access_level
 from src.app.models.user import User, user_share_schema, users_share_schema
+
 from src.app.services.users_service import (create_user, format_print_user,
                                             get_user_by_email, get_user_by_id,
                                             login_user, validate_fields_nulls)
