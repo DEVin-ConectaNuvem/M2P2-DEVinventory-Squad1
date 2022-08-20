@@ -143,5 +143,3 @@ def update_product():
       status=204,
       mimetype='application/json'
     )
-  
-    

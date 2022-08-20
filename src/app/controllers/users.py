@@ -11,13 +11,16 @@ from google_auth_oauthlib.flow import Flow
 from werkzeug.utils import redirect
 
 from src.app import DB, MA
-from src.app.middlewares.auth import requires_access_level
-from src.app.models.role import Role, role_share_schema
-from src.app.models.user import User, user_share_schema, users_share_schema
-from src.app.services.users_service import (create_user, get_user_by_email,
-                                            get_user_by_id, login_user,
-                                            validate_fields_nulls)
 from src.app.utils import exist_key, generate_jwt
+from src.app.middlewares.auth import requires_access_level
+from src.app.models.user import User, user_share_schema, users_share_schema
+
+from src.app.services.users_service import (create_user, format_print_user,
+                                            get_user_by_email, get_user_by_id,
+                                            login_user, validate_fields_nulls)
+
+from src.app.utils import exist_key, generate_jwt
+
 
 user = Blueprint("user", __name__, url_prefix="/user")
 
@@ -37,7 +40,6 @@ flow = Flow.from_client_secrets_file(
 @user.route("/login", methods=["POST"])
 def login():
     list_keys = ["email", "password"]
-    print(request.get_json())
     data = exist_key(request.get_json(), list_keys)
 
     response = login_user(data["email"], data["password"])
@@ -183,8 +185,6 @@ def create():
         response=json.dumps(response), status=201, mimetype="application/json"
     )
 
-    return redirect(f"{current_app.config['FRONTEND_URL']}?jwt={token}")
-
 
 @user.route("/", methods=["GET"])
 # @requires_access_level("READ")
@@ -195,13 +195,14 @@ def get_user_by_name():
 
     if not request.args.get("name"):
         users = users_share_schema.dump(pager.items)
-        result = [format(result) for result in users]
+        result = [format_print_user(result) for result in users]
 
         return jsonify({"Status": "Sucesso", "Dados": result}), 200
 
     user_query = User.query.filter(
         User.name.ilike("%" + request.args.get("name") + "%")
     ).all()
+
     user = users_share_schema.dump(user_query)
 
     if not user:
@@ -211,23 +212,9 @@ def get_user_by_name():
             mimetype="application/json",
         )
 
-    result = [format(result) for result in user]
+    result = [format_print_user(result) for result in user]
 
     return jsonify({"Status": "Sucesso", "Dados": result}), 200
-
-
-def format(self):
-    id = self["role_id"]
-    roles = Role.query.filter_by(id=id).first_or_404()
-    role = role_share_schema.dump(roles)
-
-    return {
-        "id": self["id"],
-        "name": self["name"],
-        "email": self["email"],
-        "phone": self["phone"],
-        "role": role["name"],
-    }
 
 
 @user.route("/<int:id>", methods=["PATCH"])
