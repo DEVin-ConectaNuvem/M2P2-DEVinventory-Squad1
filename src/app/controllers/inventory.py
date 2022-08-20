@@ -64,57 +64,35 @@ def add_new_product():
       mimetype='application/json'
     )
   
-# search product by name with pagination with join table
+  
 @inventory.route('/', methods = ["GET"])
 def get_product_by_user_name():
   page =  request.args.get('page', 1, type=int)
   per_page =  20
-  pager = Inventory.query.paginate(page, per_page, error_out=False)
   
   if not request.args.get('name'):
-    products = inventories_share_schema.dump(pager.items)
+    query = DB.session.query(Inventory).slice((page-1)*per_page, page*per_page)
+    result = []
+    for product in query:
+        result.append(product.format())
     
-    #alterar user_id quando vazio para 'na empresa'
-    for product in products:
-      if product['user_id'] == None:
-        product['name'] = 'Na empresa'
+    if not result:
+      return jsonify({"Status":"Dados não encontrados"}), 204
+    else:
+      return jsonify({"Status":"Sucesso", "Dados": result}), 200
+  else:
+    query = DB.session.query(Inventory).join(User).filter(User.name.ilike('%' + request.args.get('name') + '%')).slice((page-1)*per_page, page*per_page)
+    result = []
+    for item in query:
+      result.append(item.format())
     
-    if not products:
-      return Response(
-        response=json.dumps({"error": 'Nenhum produto encontrado'}),
-        status=400,
-        mimetype='application/json'
-      )
+    if not result:
+      return jsonify({"Status":"Dados não encontrados"}), 204
+    else:
+      return jsonify({"Status":"Sucesso", "Dados": result}), 200
 
-    return jsonify({
-      'Status': 'Sucesso',
-      'Dados': products,
-      'Total': len(products)
-  }), 200
 
-  ids_users = User.query.filter(User.name.ilike('%' + request.args.get('name') + '%')).all()
-  list_users_id = [user.id for user in ids_users]
-
-  list_products = []
-  for product in pager.items:
-    if product.user_id in list_users_id:
-      list_products.append({
-        'id': product.id,
-        'product_category_id': product.product_category_id,
-        'product_code': product.product_code,
-        'title': product.title
-      })
-  
-  if not list_products:
-    return Response(
-      response=json.dumps({"error": 'Nenhum produto encontrado'}),
-      status=204,
-      mimetype='application/json'
-    )
-    
-  return inventories_share_schema.jsonify(list_products)
-
-@inventory.route('/', methods = ["GET"])
+@inventory.route('/results', methods = ["GET"])
 def get_all_products():
   products = Inventory.query.all()
   users = User.query.all()
