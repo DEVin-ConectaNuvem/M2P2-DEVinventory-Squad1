@@ -1,4 +1,6 @@
-import requests , random
+import random
+
+import requests
 from sqlalchemy.sql.expression import func
 
 from src.app.models.city import City, cities_share_schema
@@ -11,8 +13,7 @@ from src.app.models.product_categories import (Product_Categories,
 from src.app.models.role import Role, roles_share_schema
 from src.app.models.state import State, states_share_schema
 from src.app.models.user import User, users_share_schema
-
-from src.app.utils import is_table_empty , random_or_none
+from src.app.utils import is_table_empty, random_or_none
 
 inventory = [
     {""}
