@@ -12,6 +12,7 @@ from google_auth_oauthlib.flow import Flow
 from src.app.services.users_service import login_user
 from src.app.utils import exist_key, generate_jwt
 
+
 user = Blueprint('user', __name__, url_prefix="/user")
 
 flow = Flow.from_client_secrets_file(
@@ -66,25 +67,38 @@ def logout():
       mimetype='application/json'
 )
   
-@user.route('/create', methods = ["POST"])
-@requires_access_level("WRITE")
+@user.route('/', methods = ["POST"])
+@requires_access_level(["READ","WRITE","UPDATE","DELETE"])
 def create():
-  list_keys = ["city_id", "name", "age", "email", "password"]
+  
+  list_keys = ["city_id", "gender_id", "role_id",  "name", "age", "email", "phone", "password", "cep", "street", "district", "number_street"]
 
   data = exist_key(request.get_json(), list_keys)
+ 
+  complement = None
+  landmark = None
 
-  roles = None
+  if "complement" in data:
+    complement = data['complement']
 
-  if "roles" in data:
-    roles = data['roles']
+  if "landmark" in data:
+    landmark = data['landmark']
   
   response = create_user(
     data["city_id"],
-    data["name"],
-    data["age"], 
-    data["email"], 
+    data["gender_id"],
+    data["role_id"], 
+    data["name"], 
+    data["age"],
+    data["email"],
+    data["phone"],
     data["password"],
-    roles
+    data["cep"],
+    data["street"],
+    data["district"],
+    complement,
+    landmark,
+    data["number_street"]
   )
 
   if "error" in response:
