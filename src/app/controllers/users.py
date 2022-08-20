@@ -90,7 +90,7 @@ def callback():
             name=user_google_dict["name"],
             age=None,
             email=user_google_dict["email"],
-            phone=None,|
+            phone=None,
             password='senha123',
             cep=None,
             street=None,
