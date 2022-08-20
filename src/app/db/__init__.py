@@ -20,22 +20,22 @@ inventory = [
     ]
 users = [
     {"city_id": 1566, "gender_id" : 1, "role_id" : 1 , "name" : "João Victor", 
-    "age" : "1996-04-08" , "email" : 'joao@email.com',"phone" : '(48) 99999-9999', "password" : "adminadmin",
+    "age" : "1996-04-08" , "email" : 'joao@email.com',"phone" : '48999999999', "password" : "Abcd@123",
     "cep" : 80130780, "street" : "Almeida street", "district" : "Capoeiras", "complement" : None,
     "landmark" : None, "number_street" : 210},
 
     {"city_id": 2600, "gender_id" : 2, "role_id" : 2,  "name" : "Ana Luiza",
-    "age" : "1998-05-12" , "email" : 'ana@email.com', "phone" : '(48) 99888-9866', "password" : "pass123",
+    "age" : "1998-05-12" , "email" : 'ana@email.com', "phone" : '48998889866', "password" : "Xyzw#123",
     "cep" : 881150989, "street" : "Borges street", "district" : "Centro", "complement" : None,
     "landmark" : None, "number_street" : 150},
 
     {"city_id": 2000, "gender_id" : 3, "role_id" : 3,  "name" : "Pablo Willow",
-    "age" : "1990-08-15" , "email" : 'pablo@email.com', "phone" : '(48) 88888-7777', "password" : "pass321",
+    "age" : "1990-08-15" , "email" : 'pablo@email.com', "phone" : '48988887777', "password" : "Dev&0001",
     "cep" : 88110210, "street" : "Gama street", "district" : "Ingleses", "complement" : None,
     "landmark" : None, "number_street" : 999},
 
     {"city_id": 3000, "gender_id" : 4, "role_id" : 4,  "name" : "Juca Flint",
-    "age" : "2000-10-01" , "email" : 'juca@email.com', "phone" : '(48) 77777-1234', "password" : "passpass123",
+    "age" : "2000-10-01" , "email" : 'juca@email.com', "phone" : '48977771234', "password" : "Toor&456",
     "cep" : 88050558, "street" : "Delta street", "district" : "Areias", "complement" : None,
     "landmark" : None, "number_street" : 1052}
 ]
