@@ -16,6 +16,7 @@ from src.app.utils import exist_key, generate_jwt, encrypt_password
 import os
 from src.app import DB, MA
 
+
 user = Blueprint('user', __name__, url_prefix="/user")
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
@@ -123,17 +124,22 @@ def logout():
       mimetype='application/json'
 )
   
-@user.route('/create', methods = ["POST"])
-@requires_access_level("WRITE")
+@user.route('/', methods = ["POST"])
+@requires_access_level(["READ","WRITE","UPDATE","DELETE"])
 def create():
-  list_keys = ["city_id", "name", "age", "email", "password"]
+  
+  list_keys = ["city_id", "gender_id", "role_id",  "name", "age", "email", "phone", "password", "cep", "street", "district", "number_street"]
 
   data = exist_key(request.get_json(), list_keys)
+ 
+  complement = None
+  landmark = None
 
-  roles = None
+  if "complement" in data:
+    complement = data['complement']
 
-  if "roles" in data:
-    roles = data['roles']
+  if "landmark" in data:
+    landmark = data['landmark']
   
   response = create_user(
     data["city_id"],
@@ -147,10 +153,9 @@ def create():
     data["cep"],
     data["street"],
     data["district"],
-    data["complement"],
-    data["landmark"],
-    data["number_street"],
-    roles
+    complement,
+    landmark,
+    data["number_street"]
   )
 
   if "error" in response:
