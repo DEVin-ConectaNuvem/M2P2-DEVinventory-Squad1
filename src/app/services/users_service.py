@@ -87,15 +87,23 @@ def update_user_by_id(user, request_json):
   user.update(request_json)
 
 def validate_fields_nulls(request_json, list_keys):
+  excludeNone(request_json)
+      
   if not request_json:
     return {"error": "Não é possivel realizar operação, não há campos não preenchidos"}
   for key in request_json:
     if key not in list_keys:
       return {f"error": f"Campo '{key}' não existe ou não pode ser alterado"}
-    if request_json[key] == "":
-      return {f"error": f"Campo '{key}' não pode ser vazio"}
-    if request_json[key] == "" and list_keys[key] != "":
+    if request_json[key] == "" and list_keys[key] != None and list_keys[key] != "":
       return {f"error": f"Campo '{key}' não pode ser alterado para nulo"}
+
+def excludeNone(dict):
+    for key in list(dict):
+        if key in dict:
+            if type(dict[key]) == dict:
+                excludeNone(dict[key])
+            if not dict[key]:
+                del dict[key]
 
 
 def format_print_user(self):
