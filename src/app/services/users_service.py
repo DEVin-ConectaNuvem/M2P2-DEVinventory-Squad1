@@ -1,5 +1,6 @@
-from datetime import datetime, timedelta
 import re
+from datetime import datetime, timedelta
+
 from src.app.models.role import Role
 from src.app.models.user import User, user_share_schema
 from src.app.utils import check_password, generate_jwt
@@ -72,3 +73,27 @@ def get_user_by_email(email):
       return { "id": user_dict['id'], "roles": user_dict["roles"] }
   except:
       return { "error": "Algo deu errado!", "status_code": 500 }
+
+def get_user_by_id(id):
+  try:
+      user = User.query.get(id)
+      return user
+  except:
+      return { "error": "Algo deu errado!", "status_code": 404 }
+    
+def update_user_by_id(user, request_json):
+  user = get_user_by_id(user['id'])
+  user.update(request_json)
+  
+  
+def validate_fields_nulls(request_json, list_keys):
+  if not request_json:
+    return {"error": "Não é possivel realizar operação, não há campos não preenchidos"}
+  for key in request_json:
+    if key not in list_keys:
+      return {f"error": f"Campo '{key}' não existe ou não pode ser alterado"}
+    if request_json[key] == "":
+      return {f"error": f"Campo '{key}' não pode ser vazio"}
+    if request_json[key] == "" and list_keys[key] != "":
+      return {f"error": f"Campo '{key}' não pode ser alterado para nulo"}
+  

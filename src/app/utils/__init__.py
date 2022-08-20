@@ -1,5 +1,6 @@
 import locale
 import random
+import re
 
 import bcrypt
 from flask import current_app
@@ -51,3 +52,8 @@ def format_currency(value):
     value = locale.currency(value, grouping=True)
     return value
 
+def check_email_validate(email):
+    if re.match(r"[^@]+@[^@]+\.[^@]+", email):
+        return True
+    else:
+        return False
