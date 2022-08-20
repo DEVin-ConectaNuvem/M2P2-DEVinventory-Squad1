@@ -10,10 +10,9 @@ def login_user(email, password: str):
         user_query = User.query.filter_by(email = email).first_or_404()
         user_dict = user_share_schema.dump(user_query)
 
-        if not check_password(password.encode("utf-8")):
+        if not check_password(password, senha=user_dict['password']):
             return { "error": "Suas credênciais estão incorretas!", "status_code": 401 }
 
-        print("passou aqui")
         payload = {
           "user_id": user_query.id,
           "exp": datetime.utcnow() + timedelta(days=1),

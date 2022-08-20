@@ -4,6 +4,7 @@ import random
 import bcrypt
 
 
+
 def is_table_empty(query):
     if query == None:
         return True
@@ -41,8 +42,8 @@ def random_or_none():
 def encrypt_password(password):
     return bcrypt.hashpw(password, bcrypt.gensalt()).decode("utf-8")
 
-def check_password(password):
-    return bcrypt.checkpw(password.encode("utf-8"), password.encode("utf-8"))
+def check_password(password: str, senha: str):
+    return bcrypt.checkpw(password.encode("utf-8"), senha.encode("utf-8"))
 
 
 
