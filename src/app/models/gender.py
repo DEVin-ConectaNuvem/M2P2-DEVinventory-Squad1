@@ -6,9 +6,6 @@ class Gender(DB.Model):
     id = DB.Column(DB.Integer, autoincrement = True, primary_key = True)
     name = DB.Column(DB.String(128), nullable = False)
 
-    def __init__(self, name):  
-      self.name = name
-    
     @classmethod
     def seed(cls, name):
         gender = Gender(

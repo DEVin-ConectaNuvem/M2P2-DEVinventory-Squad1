@@ -1,4 +1,4 @@
-
+from werkzeug.security import check_password_hash, generate_password_hash
 
 from src.app import DB, MA
 from src.app.models.city import City, city_share_schema
@@ -16,7 +16,7 @@ class User(DB.Model):
     age = DB.Column(DB.DateTime, nullable = True)
     email = DB.Column(DB.String(128), unique=True, nullable = False)
     phone = DB.Column(DB.String(128), nullable = True)
-    password = DB.Column(DB.String(84), nullable = True)
+    password_hash = DB.Column(DB.String(255), nullable = True)
     cep = DB.Column(DB.Integer, nullable=True)
     street = DB.Column(DB.String(128), nullable=True)
     district = DB.Column(DB.String(128), nullable=True)
@@ -27,24 +27,18 @@ class User(DB.Model):
     city = DB.relationship("City", foreign_keys=[city_id])
     gender = DB.relationship("Gender", foreign_keys=[gender_id])
     roles = DB.relationship("Role", foreign_keys=[role_id])
+    
+    @property
+    def password(self):
+        raise AttributeError('Senha não é um atributo legível')
 
+    @password.setter
+    def password(self, password):
+        self.password_hash = generate_password_hash(password)
     
-    def __init__(self, city_id, gender_id, role_id,  name, age, email, phone, password, cep, street, district, complement, landmark, number_street):
-      self.city_id = city_id
-      self.gender_id = gender_id
-      self.role_id = role_id
-      self.name = name
-      self.age = age
-      self.email = email
-      self.phone = phone
-      self.password = password
-      self.cep = cep
-      self.street = street
-      self.district = district
-      self.complement = complement
-      self.landmark = landmark
-      self.number_street = number_street
-    
+    def validate_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
     @classmethod
     def seed(cls, city_id, gender_id, role_id,  name, age, email, phone, password, cep, street, district, complement=None, landmark=None, number_street=None):
         user = User(

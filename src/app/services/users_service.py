@@ -3,17 +3,18 @@ from datetime import datetime, timedelta
 
 from src.app.models.role import Role
 from src.app.models.user import User, user_share_schema
-from src.app.utils import check_password, generate_jwt
+from src.app.utils import generate_jwt
 
 
 def login_user(email, password: str):
     try:
         user_query = User.query.filter_by(email = email).first_or_404()
-        user_dict = user_share_schema.dump(user_query)
-
-        if not check_password(password, senha=user_dict['password']):
+       
+        if user_query.validate_password(password, senha=user_dict['password']):
             return { "error": "Suas credênciais estão incorretas!", "status_code": 401 }
-
+          
+        user_dict = user_share_schema.dump(user_query)
+        
         payload = {
           "user_id": user_query.id,
           "exp": datetime.utcnow() + timedelta(days=1),
@@ -65,7 +66,6 @@ def create_user(city_id, gender_id, role_id,  name, age, email, phone, password,
       except:
         return {"error": "Algo deu errado!"}
 
-
 def get_user_by_email(email):
   try:
       user_query = User.query.filter_by(email = email).first_or_404()
@@ -80,12 +80,11 @@ def get_user_by_id(id):
       return user
   except:
       return { "error": "Algo deu errado!", "status_code": 404 }
-    
+
 def update_user_by_id(user, request_json):
   user = get_user_by_id(user['id'])
   user.update(request_json)
-  
-  
+
 def validate_fields_nulls(request_json, list_keys):
   if not request_json:
     return {"error": "Não é possivel realizar operação, não há campos não preenchidos"}
@@ -96,4 +95,4 @@ def validate_fields_nulls(request_json, list_keys):
       return {f"error": f"Campo '{key}' não pode ser vazio"}
     if request_json[key] == "" and list_keys[key] != "":
       return {f"error": f"Campo '{key}' não pode ser alterado para nulo"}
-  
+

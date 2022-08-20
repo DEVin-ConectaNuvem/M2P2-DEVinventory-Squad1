@@ -12,10 +12,6 @@ class Role(DB.Model):
     name = DB.Column(DB.String(128), nullable = False)
     permissions = DB.relationship("Permission", secondary=roles_permissions, backref="roles")
     
-    def __init__(self, description, name , permissions):  
-      self.description = description
-      self.name = name
-      self.permissions = permissions
     
     @classmethod
     def seed(cls, description, name , permissions):

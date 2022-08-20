@@ -10,11 +10,6 @@ class State(DB.Model):
     initials = DB.Column(DB.String(2), nullable=False)
 
     country = DB.relationship("Country", foreign_keys=[country_id])
-
-    def __init__(self, country_id, name, initials):
-      self.country_id = country_id
-      self.name = name
-      self.initials = initials
     
     @classmethod
     def seed(cls, country_id, name, initials):

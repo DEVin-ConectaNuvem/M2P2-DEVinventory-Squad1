@@ -48,11 +48,12 @@ roles = [
 
 
 def populate_db_country():
-    if is_table_empty(Country.query.first()):
+    if is_table_empty(Country.query.first(), 'countries'):
         Country.seed('Brazil' , 'Português')
+        print('Countries populated')
 
 def populate_db_state():
-    if is_table_empty(State.query.first()):
+    if is_table_empty(State.query.first(), 'states'):
         country = Country.query.first()
         country_dict = country_share_schema.dump(country)
         states_data = requests.get("https://servicodados.ibge.gov.br/api/v1/localidades/estados")
@@ -62,9 +63,10 @@ def populate_db_state():
             stateObject['nome'],
             stateObject['sigla']
             )
+        print('States populated')
 
 def populate_db_city():
-    if is_table_empty(City.query.first()):
+    if is_table_empty(City.query.first(), 'cities'):
         cities_data = requests.get("https://servicodados.ibge.gov.br/api/v1/localidades/municipios")
         state = State.query.order_by(State.name.asc()).all()
         state_dict = states_share_schema.dump(state)
@@ -78,38 +80,43 @@ def populate_db_city():
             state_id,
             city_object['nome']
             )
+        print('Cities populated')
 
 def populate_db_gender():
-    if is_table_empty(Gender.query.first()):
+    if is_table_empty(Gender.query.first(), 'genders'):
         genders = ['male','female' , 'trans' , 'other']
         for gender in genders:
             Gender.seed(
                 gender
             )
+        print("Genders populated")
 
 def populate_db_permission():
-        if is_table_empty(Permission.query.first()):
+        if is_table_empty(Permission.query.first(), 'permissions'):
             permissions = ['DELETE', 'READ', 'WRITE', 'UPDATE']
             for permission in permissions:
                 Permission.seed(
                     permission
                 )
+            print('Permissions populated')
 
 def populate_db_product_category():
-    if is_table_empty(Product_Categories.query.first()):
+    if is_table_empty(Product_Categories.query.first(), 'product_categories'):
         categories = ['Computador', 'Celular', 'Tablet', 'Cadeira', 'Mesa', 'Teclado', 'Mouse', 'Televisao']
         for category in categories:
             Product_Categories.seed(
             category
             )
+        print('Product Categories populated')
 
 def populate_db_permission():
-        if is_table_empty(Permission.query.first()):
+        if is_table_empty(Permission.query.first(), 'permissions'):
             permissions = ['DELETE', 'READ', 'WRITE', 'UPDATE']
             for permission in permissions:
                 Permission.seed(
                     permission
                 )
+            print('Permissions populated')
 
 def populate_db_role():
         permissions = [
@@ -119,41 +126,41 @@ def populate_db_role():
             {"role" : "coord" , "permissions" : Permission.query.filter(Permission.description.in_(['READ', 'WRITE' , 'UPDATE'])).all()}
         ]
         
-        if is_table_empty(Role.query.first()):
+        if is_table_empty(Role.query.first(), 'roles'):
             for index , role in enumerate(roles):
                 Role.seed(
                     role['description'],
                     role['name'],
                     permissions[index]['permissions']
                 )
-
+            print("Roles populated")
+        
 def populate_db_user():
-    if is_table_empty(User.query.first()):
+    if is_table_empty(User.query.first(), 'users'):
         for user in users:
             User.seed(
                 user['city_id'], user['gender_id'], user['role_id'],  user['name'], user['age'],
                 user['email'], user['phone'], user['password'], user['cep'], user['street'], user['district'],
                 user['complement'], user['landmark'], user['number_street']
             )
-
-
+        print("Users populated")
 
 def populate_db_inventory():
-    if is_table_empty(Inventory.query.first()):
-
+    if is_table_empty(Inventory.query.first(), 'inventories'):
         products = requests.get('https://fakestoreapi.com/products')
         products = products.json() + products.json()
         for index, product in enumerate(products):
             Inventory.seed(
-                random.randint(1 , 7),
-                random_or_none(),
-                product['title'],
-                index + 1,
-                product['price'],
-                'lorem',
-                'ipsum',
-                product['description']
+                product_category_id=random.randint(1 , 7),
+                user_id=random_or_none(),
+                title=product['title'],
+                product_code=index + 1,
+                value=float(product['price']),
+                brand='lorem',
+                template='url',
+                description=product['description']
             )
+        print("Populating inventory done")
 
 # Função final que vai chamar as demais funções de inserção de dados
 def populate_db():

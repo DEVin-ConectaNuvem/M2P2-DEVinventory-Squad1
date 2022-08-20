@@ -10,10 +10,6 @@ class City(DB.Model):
 
     state = DB.relationship("State", foreign_keys=[state_id])
 
-    def __init__(self, state_id, name):
-      self.state_id = state_id
-      self.name = name
-
     @classmethod
     def seed(cls, state_id, name):
         city = City(
