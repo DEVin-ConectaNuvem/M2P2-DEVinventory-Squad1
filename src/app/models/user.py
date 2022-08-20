@@ -66,6 +66,12 @@ class User(DB.Model):
         user.save()
         return user
     
+    def update(self, data):
+        for key, value in data.items():
+            setattr(self, key, value)
+            self.save()
+        return self
+    
     def save(self):
         DB.session.add(self)
         DB.session.commit()

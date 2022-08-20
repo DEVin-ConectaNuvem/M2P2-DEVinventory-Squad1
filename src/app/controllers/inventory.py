@@ -1,6 +1,6 @@
 import json
 
-from flask import Blueprint, abort, jsonify, redirect, request
+from flask import Blueprint, abort, jsonify, request
 from flask.wrappers import Response
 
 from src.app import DB
