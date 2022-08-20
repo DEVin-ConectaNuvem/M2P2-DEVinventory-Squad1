@@ -38,7 +38,40 @@ Intalar o Poetry através do comando abaixo no cmd do Windows:
 
 Executar o comando: <i>poetry run flask run</i>
 
+# Criar tabelas no banco:
+
+<i>poetry run flask db init</i>
+<i>poetry run flask db migrate</i>
+<i>poetry run flask db upgrade</i>
+
+# Popular as tabelas do database:
+
+<i>poetry run flask populate_db</i>
+
+
 # Endpoints:
+
+Inventory
+
+<ul>
+<li>POST/inventory/create</li>
+<li>GET/inventory</li> - trás todos os resultados
+<li>GET/inventory</li> - pesquisa por nome
+<li>PATH/inventory</li>
+</ul>
+
+Users
+
+<ul>
+<li>POST/user/login</li>
+<li>POST/user/auth/google</li>
+<li>GET/user/callback </li>
+<li>POST/user criar o usuário</li>
+<li>POST/user/logout </li>
+<li>GET/user</li>
+</ul>
+
+Utilizamos oSwagger para a documentação dos endpoints para acessar <a href="http://localhost:5000/apidocs/" target="_blank">http://localhost:5000/apidocs/</a>
 
 # Tecnologias utilizadas:
 
@@ -72,4 +105,8 @@ Somos os DEVinSanes, time de desenvolvedores full-stak, desenvolvemos o projeto 
 <ul>
 <li><a href="https://flask.palletsprojects.com/en/2.2.x/" target="_blank">Flask</a></li>
 <li><a href="https://python-poetry.org/docs/" target="_blank">Poetry</a></li>
+<li><a href="https://github.com/flasgger/flasgger#installation" target="_blank">Swagger</a></li>
+<li><a href="https://flask-marshmallow.readthedocs.io/en/latest/" target="_blank">Flask-marshmallow</a></li>
+<li><a href="https://developers.google.com/identity/protocols/oauth2" target="_blank">Google-Auth</a></li>
+<li><a href="https://jwt.io/" target="_blank">JWT</a></li>
   </ul>
