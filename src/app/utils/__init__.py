@@ -1,15 +1,16 @@
 import locale
 import random
 
-import bcrypt
 from flask import current_app
 from jwt import encode
 
 
-def is_table_empty(query):
+def is_table_empty(query, table):
     if query == None:
+        print(f"Populating {table}...")
         return True
     else:
+        print(f"{table} is populated!")
         return False
 
 # verificar se todas as chaves obrigatorias estão sendo enviadas
@@ -38,13 +39,6 @@ def random_or_none():
         return None
     elif mod == 1:
         return random.randint(1 , 4)
-
-
-def encrypt_password(password):
-    return bcrypt.hashpw(password, bcrypt.gensalt()).decode("utf-8")
-
-def check_password(password: str, senha: str):
-    return bcrypt.checkpw(password.encode("utf-8"), senha.encode("utf-8"))
 
 def format_currency(value):
     locale.setlocale( locale.LC_ALL, 'pt_BR.UTF-8' )
