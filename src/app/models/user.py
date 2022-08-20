@@ -3,7 +3,7 @@ import bcrypt
 from src.app import DB, MA
 from src.app.models.city import City, city_share_schema
 from src.app.models.gender import Gender, gender_share_schema
-from src.app.models.role import Role
+from src.app.models.role import Role, role_share_schema
 
 
 class User(DB.Model):
@@ -80,8 +80,9 @@ class User(DB.Model):
 class UserSchema(MA.Schema):
     city = MA.Nested(city_share_schema)
     gender = MA.Nested(gender_share_schema)
+    roles = MA.Nested(role_share_schema)
     class Meta: 
-        fields = ('id', 'city_id', 'gender_id', 'role_id', 'name', 'age', 'email', "phone", 'password', "cep", "street", "disctict", "complement", "landmark", 'number_street', "city", "gender")
+        fields = ('id', 'city_id', 'gender_id', 'role_id', 'name', 'age', 'email', "phone", 'password', "cep", "street", "disctict", "complement", "landmark", 'number_street', "city", "gender", "roles")
 
 user_share_schema = UserSchema()
 users_share_schema = UserSchema(many = True)
