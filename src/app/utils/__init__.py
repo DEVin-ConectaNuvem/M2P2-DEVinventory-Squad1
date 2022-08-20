@@ -1,8 +1,9 @@
+import locale
+import random
+
+import bcrypt
 from flask import current_app
 from jwt import encode
-import random
-import bcrypt
-
 
 
 def is_table_empty(query):
@@ -45,5 +46,8 @@ def encrypt_password(password):
 def check_password(password: str, senha: str):
     return bcrypt.checkpw(password.encode("utf-8"), senha.encode("utf-8"))
 
-
+def format_currency(value):
+    locale.setlocale( locale.LC_ALL, 'pt_BR.UTF-8' )
+    value = locale.currency(value, grouping=True)
+    return value
 

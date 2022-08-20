@@ -5,10 +5,11 @@ from flask.wrappers import Response
 
 from src.app import DB
 from src.app.models.inventory import Inventory, inventories_share_schema
+from src.app.models.user import User
 from src.app.services.inventory_service import (create_product,
                                                 valida_valor_produto,
                                                 verifica_existencia_produto)
-from src.app.utils import exist_key
+from src.app.utils import exist_key, format_currency
 
 inventory = Blueprint('inventory', __name__, url_prefix="/inventory")
 
@@ -47,7 +48,7 @@ def add_new_product():
               data['brand'],
               data['template'],
               data['description']   
-    )
+  )
 
   if "error" in produto:
    return Response(
@@ -63,10 +64,19 @@ def add_new_product():
     )
   
 
-  
-
 @inventory.route('/', methods = ["GET"])
 def get_all_products():
   products = Inventory.query.all()
-  result = inventories_share_schema.dump(products)
-  return jsonify(result), 204
+  users = User.query.all()
+  
+  resultado = {
+      'numero de usuários': len(users),
+      'quantidade de produtos': len(products),
+      'valor total de itens': format_currency(sum([product.value for product in products])),
+      'itens emprestados': len([product.user_id for product in products if product.user_id is not None or product.user_id != 0])}
+  
+  return Response(
+    response=json.dumps(resultado),
+    status=200,
+    mimetype='application/json'
+  )
