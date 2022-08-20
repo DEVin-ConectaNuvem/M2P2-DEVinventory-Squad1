@@ -12,7 +12,7 @@ from google_auth_oauthlib.flow import Flow
 from google import auth
 from google.oauth2 import id_token 
 from src.app.services.users_service import login_user
-from src.app.utils import exist_key, generate_jwt, gen_age, encrypt_password
+from src.app.utils import exist_key, generate_jwt, gen_age, encrypt_password, gen_number_street, gen_landmark, gen_complement, gen_bairro
 import os
 from src.app import DB, MA
 
@@ -89,10 +89,10 @@ def callback():
           password=encrypt_password("senha1".encode("utf-8")),
           cep=None,
           street=None,
-          district=None,
-          complement=None,
-          landmark=None,
-          number_street=None
+          district=gen_bairro(),
+          complement=gen_complement(),
+          landmark=gen_landmark(),
+          number_street=gen_number_street()
         )
         DB.session.add(user)
         DB.session.commit()

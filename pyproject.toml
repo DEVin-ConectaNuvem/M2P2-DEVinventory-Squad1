@@ -23,6 +23,7 @@ google-auth-oauthlib = "^0.5.2"
 google-auth = "^2.10.0"
 Flask-Cors = "^3.0.10"
 psycopg2-binary = "^2.9.3"
+Faker = "^14.1.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
