@@ -4,7 +4,8 @@ from flask import Blueprint, abort, jsonify, redirect, request
 from flask.wrappers import Response
 
 from src.app import DB
-from src.app.models.inventory import Inventory, inventories_share_schema
+from src.app.models.inventory import (Inventory, inventories_share_schema,
+                                      inventory_share_schema)
 from src.app.models.user import User
 from src.app.services.inventory_service import (create_product,
                                                 valida_valor_produto,
@@ -130,3 +131,39 @@ def get_all_products():
     mimetype='application/json'
   )
 
+@inventory.route('/', methods = ["PATCH"])
+def update_product():
+    fields_not_allowed = ['product_category_id', 'product_code']
+    
+    for field in fields_not_allowed:
+      if field in request.json:
+        return Response(
+          response=json.dumps({"error": 'Campo ' + field + ' não pode ser alterado'}),
+          status=400,
+          mimetype='application/json'
+        )
+    
+    if not request.args.get('id'):
+        return Response(
+          response=json.dumps({"error": 'ID do produto não informado'}),
+          status=400,
+          mimetype='application/json'
+      )
+    
+    id = request.args.get('id')
+    
+    product = Inventory.query.get(id)
+    product.update(request.json)
+    
+    product = inventory_share_schema.dump(product)
+    
+    return Response(
+      response=json.dumps({"error": False, 
+                           "message": "Produto atualizado com sucesso",
+                           'dados': product
+                           }),
+      status=204,
+      mimetype='application/json'
+    )
+  
+    
