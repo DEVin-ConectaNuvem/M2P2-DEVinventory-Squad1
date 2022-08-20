@@ -1,21 +1,28 @@
 import json
+import os
+
 import requests
 
 from flask import Blueprint, current_app, request, jsonify
 from flask.globals import session
 from flask.wrappers import Response
+
 from werkzeug.utils import redirect
 from google_auth_oauthlib.flow import Flow
 from google import auth 
 from google.oauth2 import id_token
 
-from src.app.utils import exist_key, generate_jwt
-from src.app.models.user import User, users_share_schema
-from src.app.services.users_service import create_user, login_user, get_user_by_email
 from src.app.middlewares.auth import requires_access_level
 from src.app.models.role import Role, role_share_schema
+from src.app.models.user import User, user_share_schema
+from src.app import DB, MA
+from src.app.services.users_service import (create_user, get_user_by_email,
+                                            login_user)
+from src.app.utils import encrypt_password, exist_key, generate_jwt
 
 user = Blueprint('user', __name__, url_prefix="/user")
+
+os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
 flow = Flow.from_client_secrets_file(
   client_secrets_file="src/app/db/client_secret.json",
@@ -50,14 +57,65 @@ def login():
 
 @user.route("/auth/google", methods=["POST"])
 def auth_google():
-  authorization_url, state = Flow.authorization_url()
-  session["state"] = state
+    authorization_url, state = flow.authorization_url()
+    session["state"] = state
 
-  return Response(
-      response=json.dumps({'url':authorization_url}),
-      status=200,
-      mimetype='application/json'
-)
+    return Response(
+        response=json.dumps({'url':authorization_url}),
+        status=200,
+        mimetype='application/json'
+    )
+
+@user.route('/callback', methods = ["GET"])
+def callback():
+      flow.fetch_token(authorization_response = request.url)
+      credentials = flow.credentials
+      request_session = requests.session()
+      token_google = auth.transport.requests.Request(session=request_session)
+
+      user_google_dict = id_token.verify_oauth2_token(
+        id_token = credentials.id_token,
+        request=token_google,
+        audience=current_app.config['GOOGLE_CLIENT_ID']
+      )
+
+      user = get_user_by_email(user_google_dict['email'])
+
+      if "error" in user:
+        user = User(
+          city_id=1,
+          gender_id=1,
+          role_id=3,
+          name=user_google_dict['name'],
+          age=None,
+          email=user_google_dict['email'],
+          phone=None,
+          password=encrypt_password("senha1".encode("utf-8")),
+          cep=None,
+          street=None,
+          district=None,
+          complement=None,
+          landmark=None,
+          number_street=None
+        )
+        DB.session.add(user)
+        DB.session.commit()
+
+        user = user_share_schema.dump(user)
+             
+
+      user_google_dict["user_id"] = user['id']
+      user_google_dict["roles"] = user['roles']
+
+      session["google_id"] = user_google_dict.get("sub")
+
+      del user_google_dict['aud']
+      del user_google_dict['azp']
+
+      token = generate_jwt(user_google_dict)
+
+      return redirect(f"{current_app.config['FRONTEND_URL']}?jwt={token}")
+
 
 @user.route("/logout", methods = ["POST"])
 def logout():
@@ -69,17 +127,22 @@ def logout():
       mimetype='application/json'
 )
   
-@user.route('/create', methods = ["POST"])
-@requires_access_level("WRITE")
+@user.route('/', methods = ["POST"])
+@requires_access_level(["READ","WRITE","UPDATE","DELETE"])
 def create():
-  list_keys = ["city_id", "name", "age", "email", "password"]
+  
+  list_keys = ["city_id", "gender_id", "role_id",  "name", "age", "email", "phone", "password", "cep", "street", "district", "number_street"]
 
   data = exist_key(request.get_json(), list_keys)
+ 
+  complement = None
+  landmark = None
 
-  roles = None
+  if "complement" in data:
+    complement = data['complement']
 
-  if "roles" in data:
-    roles = data['roles']
+  if "landmark" in data:
+    landmark = data['landmark']
   
   response = create_user(
     data["city_id"],
@@ -93,10 +156,9 @@ def create():
     data["cep"],
     data["street"],
     data["district"],
-    data["complement"],
-    data["landmark"],
-    data["number_street"],
-    roles
+    complement,
+    landmark,
+    data["number_street"]
   )
 
   if "error" in response:
@@ -111,42 +173,6 @@ def create():
     status=201,
     mimetype='application/json'
   )
-
-@user.route('/callback', methods = ["GET"])
-def callback():
-
-  flow.fetch_token(authorization_response = request.url)
-  credentials = flow.credentials
-  request_session = requests.session()
-  token_google = auth.transport.requests.Request(session=request_session)
-
-  user_google_dict = id_token.verify_oauth2_token(
-    id_token = credentials.id_token,
-    request=token_google,
-    audience=current_app.config['GOOGLE_CLIENT_ID']
-  )
-  
-  user = get_user_by_email(user_google_dict['email'])
-
-  if "error" in user:
-    user = create_user(
-      50,
-      user_google_dict['name'],
-      25,
-      user_google_dict['email'],
-      "PASSWORD_DEFAULT",
-      None
-    )
-  
-  user_google_dict["user_id"] = user['id']
-  user_google_dict["roles"] = user['roles']
-
-  session["google_id"] = user_google_dict.get("sub")
-
-  del user_google_dict['aud']
-  del user_google_dict['azp']
-
-  token = generate_jwt(user_google_dict)
 
   return redirect(f"{current_app.config['FRONTEND_URL']}?jwt={token}")
 

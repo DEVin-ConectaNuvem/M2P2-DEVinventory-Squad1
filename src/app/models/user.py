@@ -1,9 +1,9 @@
-import bcrypt
+
 
 from src.app import DB, MA
 from src.app.models.city import City, city_share_schema
 from src.app.models.gender import Gender, gender_share_schema
-from src.app.models.role import Role
+from src.app.models.role import Role, role_share_schema
 
 
 class User(DB.Model):
@@ -13,13 +13,13 @@ class User(DB.Model):
     gender_id = DB.Column(DB.Integer, DB.ForeignKey(Gender.id), nullable = False)
     role_id = DB.Column(DB.Integer, DB.ForeignKey(Role.id), nullable = False)
     name = DB.Column(DB.String(128), nullable = False)
-    age = DB.Column(DB.DateTime, nullable = False)
+    age = DB.Column(DB.DateTime, nullable = True)
     email = DB.Column(DB.String(128), unique=True, nullable = False)
-    phone = DB.Column(DB.String(128), nullable = False)
-    password = DB.Column(DB.String(84), nullable = False)
-    cep = DB.Column(DB.Integer, nullable=False)
-    street = DB.Column(DB.String(128), nullable=False)
-    district = DB.Column(DB.String(128), nullable=False)
+    phone = DB.Column(DB.String(128), nullable = True)
+    password = DB.Column(DB.String(84), nullable = True)
+    cep = DB.Column(DB.Integer, nullable=True)
+    street = DB.Column(DB.String(128), nullable=True)
+    district = DB.Column(DB.String(128), nullable=True)
     complement = DB.Column(DB.String(64), nullable=True)
     landmark = DB.Column(DB.String(64), nullable=True)
     number_street = DB.Column(DB.Integer, nullable=True) 
@@ -45,11 +45,8 @@ class User(DB.Model):
       self.landmark = landmark
       self.number_street = number_street
     
-    def check_password(self, password):
-        return bcrypt.checkpw(password.encode("utf-8"), self.password.encode("utf-8"))
-    
     @classmethod
-    def seed(cls, city_id, gender_id, role_id,  name, age, email, phone, password, cep, street, district, complement, landmark, number_street):
+    def seed(cls, city_id, gender_id, role_id,  name, age, email, phone, password, cep, street, district, complement=None, landmark=None, number_street=None):
         user = User(
             city_id=city_id,
             gender_id=gender_id,
@@ -68,10 +65,6 @@ class User(DB.Model):
         )
         user.save()
         return user
-
-    @staticmethod
-    def encrypt_password(password):
-        return bcrypt.hashpw(password, bcrypt.gensalt()).decode('utf-8')
     
     def save(self):
         DB.session.add(self)
@@ -80,8 +73,9 @@ class User(DB.Model):
 class UserSchema(MA.Schema):
     city = MA.Nested(city_share_schema)
     gender = MA.Nested(gender_share_schema)
+    roles = MA.Nested(role_share_schema)
     class Meta: 
-        fields = ('id', 'city_id', 'gender_id', 'role_id', 'name', 'age', 'email', "phone", 'password', "cep", "street", "disctict", "complement", "landmark", 'number_street', "city", "gender")
+        fields = ('id', 'city_id', 'gender_id', 'role_id', 'name', 'age', 'email', "phone", 'password', "cep", "street", "disctict", "complement", "landmark", 'number_street', "city", "gender", "roles")
 
 user_share_schema = UserSchema()
 users_share_schema = UserSchema(many = True)

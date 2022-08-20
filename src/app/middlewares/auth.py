@@ -31,9 +31,12 @@ def requires_access_level(permission):
 
             found_permission = 0
 
-            for role in current_user.roles:
-                for permission_in_roles in role.permissions: 
-                    if permission_in_roles.description == permission:
+            # array de permissões do role         
+            for permission_in_role in current_user.roles.permissions:
+                # para cada permissão desse array de permission
+                for permission_one in permission:
+                    #verifica se a permission do role é igual a permission necessária para o acesso
+                    if permission_in_role.description == permission_one:
                         found_permission = found_permission + 1
 
             if found_permission == 0:

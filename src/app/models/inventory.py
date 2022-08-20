@@ -39,6 +39,19 @@ class Inventory(DB.Model):
   def save(self):
     DB.session.add(self)
     DB.session.commit()
+  
+  def format(self):
+    return {
+      'id': self.id,
+      'product_category_id': self.product_category_id,
+      'user_id': self.user_id,
+      'product_code': self.product_code,
+      'title': self.title,
+      'value': self.value,
+      'brand': self.brand,
+      'template': self.template,
+      'description': self.description
+    }
     
 
 class InventorySchema(MA.Schema):
