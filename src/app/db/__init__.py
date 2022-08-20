@@ -165,5 +165,4 @@ def populate_db():
     populate_db_product_category()
     populate_db_role()
     populate_db_user()
-    populate_db_user()
     populate_db_inventory()

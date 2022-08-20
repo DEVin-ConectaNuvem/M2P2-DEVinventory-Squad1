@@ -2,21 +2,23 @@ import json
 import os
 
 import requests
-from flask import Blueprint, current_app, request
+
+from flask import Blueprint, current_app, request, jsonify
 from flask.globals import session
 from flask.wrappers import Response
-from google import auth
-from google.oauth2 import id_token
-from google_auth_oauthlib.flow import Flow
-from werkzeug.utils import redirect
 
-from src.app import DB, MA
+from werkzeug.utils import redirect
+from google_auth_oauthlib.flow import Flow
+from google import auth 
+from google.oauth2 import id_token
+
 from src.app.middlewares.auth import requires_access_level
+from src.app.models.role import Role, role_share_schema
 from src.app.models.user import User, user_share_schema
+from src.app import DB, MA
 from src.app.services.users_service import (create_user, get_user_by_email,
                                             login_user)
 from src.app.utils import encrypt_password, exist_key, generate_jwt
-
 
 user = Blueprint('user', __name__, url_prefix="/user")
 
@@ -172,4 +174,52 @@ def create():
     mimetype='application/json'
   )
 
+  return redirect(f"{current_app.config['FRONTEND_URL']}?jwt={token}")
 
+
+@user.route('/', methods = ["GET"])
+#@requires_access_level("READ")
+def get_user_by_name():
+  page =  request.args.get('page', 1, type=int)
+  per_page =  20
+  pager = User.query.paginate(page, per_page, error_out=False)
+
+  if not request.args.get('name'):
+    users = users_share_schema.dump(pager.items)
+    result = [format(result) for result in users]
+
+    return jsonify({
+        'Status': 'Sucesso',
+        'Dados': result
+    }), 200
+  
+  user_query = User.query.filter(User.name.ilike('%' + request.args.get('name') + '%')).all()
+  user = users_share_schema.dump(user_query)
+
+  if not user:
+    return Response(
+      response=jsonify({"message": "Usuario nao encontrado."}),
+      status=204,
+      mimetype='application/json'
+    )
+  
+  result = [format(result) for result in user]
+
+  return jsonify({
+      'Status': 'Sucesso',
+      'Dados': result
+  }), 200
+
+
+def format(self):
+  id = self['role_id']
+  roles = Role.query.filter_by(id=id).first_or_404()
+  role = role_share_schema.dump(roles)
+  
+  return {
+    'id': self['id'],
+    'name': self['name'],
+    'email': self['email'],
+    'phone': self['phone'],
+    'role': role['name']
+  }
