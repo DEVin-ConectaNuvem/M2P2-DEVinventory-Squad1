@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 
 from src.app.models.role import Role
 from src.app.models.user import User, user_share_schema
-from src.app.utils import generate_jwt, check_password
+from src.app.utils import check_password, generate_jwt
 
 
 def login_user(email, password: str):
