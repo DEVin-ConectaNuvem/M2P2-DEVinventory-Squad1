@@ -2,6 +2,7 @@ from flask import current_app
 from jwt import encode
 import random
 import bcrypt
+from datetime import datetime, date
 
 
 
@@ -44,6 +45,15 @@ def encrypt_password(password):
 
 def check_password(password: str, senha: str):
     return bcrypt.checkpw(password.encode("utf-8"), senha.encode("utf-8"))
+
+def gen_age(min_year=1915, max_year=2005):
+    # gera um datetime no formato yyyy-mm-dd hh:mm:ss.000000
+    year = random.randint(min_year, max_year)
+    month = random.randint(11, 12)
+    day = random.randint(1, 28)
+    date = datetime(year, month, day)
+    return date
+
 
 
 

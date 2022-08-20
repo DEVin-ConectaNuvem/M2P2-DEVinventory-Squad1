@@ -12,7 +12,7 @@ from google_auth_oauthlib.flow import Flow
 from google import auth
 from google.oauth2 import id_token 
 from src.app.services.users_service import login_user
-from src.app.utils import exist_key, generate_jwt, encrypt_password
+from src.app.utils import exist_key, generate_jwt, gen_age, encrypt_password
 import os
 from src.app import DB, MA
 
@@ -83,7 +83,7 @@ def callback():
           gender_id=1,
           role_id=3,
           name=user_google_dict['name'],
-          age=None,
+          age=gen_age(),
           email=user_google_dict['email'],
           phone=None,
           password=encrypt_password("senha1".encode("utf-8")),
