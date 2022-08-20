@@ -85,7 +85,6 @@ def update_user_by_id(user, request_json):
   user = get_user_by_id(user['id'])
   user.update(request_json)
 
-
 def validate_fields_nulls(request_json, list_keys):
   if not request_json:
     return {"error": "Não é possivel realizar operação, não há campos não preenchidos"}
@@ -96,3 +95,4 @@ def validate_fields_nulls(request_json, list_keys):
       return {f"error": f"Campo '{key}' não pode ser vazio"}
     if request_json[key] == "" and list_keys[key] != "":
       return {f"error": f"Campo '{key}' não pode ser alterado para nulo"}
+
