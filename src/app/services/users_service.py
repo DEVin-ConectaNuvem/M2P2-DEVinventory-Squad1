@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 
 from src.app.models.role import Role
 from src.app.models.user import User, user_share_schema
+from src.app.models.role import Role, role_share_schema
 from src.app.utils import generate_jwt
 
 
@@ -103,3 +104,18 @@ def excludeNone(dict):
                 excludeNone(dict[key])
             if not dict[key]:
                 del dict[key]
+
+
+def format_print_user(self):
+    id = self["role_id"]
+    roles = Role.query.filter_by(id=id).first_or_404()
+    role = role_share_schema.dump(roles)
+
+    return {
+        "id": self["id"],
+        "name": self["name"],
+        "email": self["email"],
+        "phone": self["phone"],
+        "role": role["name"]
+    }
+

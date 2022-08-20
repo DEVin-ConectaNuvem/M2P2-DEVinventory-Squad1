@@ -28,14 +28,14 @@ def add_new_product():
       response=json.dumps({"error": 'Produto já existe'}),
       status=400,
       mimetype='application/json'
-  )
+    )
   
   if not valida_valor_produto(data['value']):
     return Response(
       response=json.dumps({"error": 'Valor inválido, o valor deve ser maior que 0'}),
       status=400,
       mimetype='application/json'
-  )
+    )
   
   if "error" in data:
     return jsonify(data), 400
@@ -52,7 +52,7 @@ def add_new_product():
   )
 
   if "error" in produto:
-   return Response(
+    return Response(
       response=json.dumps({"error": produto['error']}),
       status=401,
       mimetype='application/json'
@@ -64,7 +64,6 @@ def add_new_product():
       mimetype='application/json'
     )
   
-# search product by name with pagination with join table
 @inventory.route('/', methods = ["GET"])
 def get_product_by_user_name():
   page =  request.args.get('page', 1, type=int)
@@ -74,7 +73,6 @@ def get_product_by_user_name():
   if not request.args.get('name'):
     products = inventories_share_schema.dump(pager.items)
     
-    #alterar user_id quando vazio para 'na empresa'
     for product in products:
       if product['user_id'] == None:
         product['name'] = 'Na empresa'
@@ -90,7 +88,7 @@ def get_product_by_user_name():
       'Status': 'Sucesso',
       'Dados': products,
       'Total': len(products)
-  }), 200
+    }), 200
 
   ids_users = User.query.filter(User.name.ilike('%' + request.args.get('name') + '%')).all()
   list_users_id = [user.id for user in ids_users]
@@ -114,7 +112,7 @@ def get_product_by_user_name():
     
   return inventories_share_schema.jsonify(list_products)
 
-@inventory.route('/', methods = ["GET"])
+@inventory.route('/results', methods = ["GET"])
 def get_all_products():
   products = Inventory.query.all()
   users = User.query.all()
@@ -148,7 +146,7 @@ def update_product():
           response=json.dumps({"error": 'ID do produto não informado'}),
           status=400,
           mimetype='application/json'
-      )
+        )
     
     id = request.args.get('id')
     
