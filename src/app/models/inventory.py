@@ -35,6 +35,12 @@ class Inventory(DB.Model):
     inventory = Inventory(product_category_id, user_id, title, product_code, value, brand, template, description)
     inventory.save()
     return inventory
+  
+  def update(self, data):
+    for key, value in data.items():
+      setattr(self, key, value)
+    self.save()
+    return self
     
   def save(self):
     DB.session.add(self)
