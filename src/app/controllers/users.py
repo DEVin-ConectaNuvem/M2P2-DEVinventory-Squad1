@@ -36,7 +36,31 @@ flow = Flow.from_client_secrets_file(
 @user.route("/login", methods=["POST"])
 @logged_in()
 def login():
-    
+    """Example endpoint post login
+    This is using docstrings for specifications.
+    ---
+    parameters:
+      - name: email
+        in: body
+        type: string
+        required: true
+      - name:  password 
+        in: body
+        type: string
+        required: true
+    definitions:
+      Email:
+        type: string
+      Password:
+        type: string
+    responses:
+        200:
+            description: Logado
+        400:
+            description: Invalido
+        401:
+           description: Error 
+    """
     list_keys = ["email", "password"]
     data = exist_key(request.get_json(), list_keys)
     if 'error' in data:
@@ -53,6 +77,18 @@ def login():
 
 @user.route("/auth/google", methods=["POST"])
 def auth_google():
+    """Example endpoint post login
+    This is using docstrings for specifications.
+    ---
+    parameters:
+      - name: logingoogle
+        in: body
+        type: string
+        required: true
+    responses:
+        200:
+            description: Logado
+    """
     authorization_url, state = flow.authorization_url()
     session["state"] = state
 
@@ -65,6 +101,13 @@ def auth_google():
 
 @user.route("/callback", methods=["GET"])
 def callback():
+    """Example endpoint post login
+    This is using docstrings for specifications.
+    ---
+    responses:
+        200:
+            description: Redimencionamento
+    """
     flow.fetch_token(authorization_response=request.url)
     credentials = flow.credentials
     request_session = requests.session()
@@ -110,6 +153,14 @@ def callback():
 
 @user.route("/logout", methods=["POST"])
 def logout():
+    """Example endpoint public in the database a user
+    This is using docstrings for specifications.
+    ---
+
+    responses:
+      200:
+        description: Deslogado
+    """
     session.clear()
     return jsonify({"message": "Você foi deslogado"}), 200
 
@@ -117,6 +168,98 @@ def logout():
 @user.route("/", methods=["POST"])
 @requires_access_level(["READ", "WRITE", "UPDATE", "DELETE"])
 def create():
+    """Example endpoint public in the database a user
+    This is using docstrings for specifications.
+    ---
+    parameters:
+      - name: city_id
+        in: body
+        type: interger
+        required: true
+      - name:  gender_id 
+        in: body
+        type: interger
+        required: true
+      - name: role_id
+        in: body
+        type: interger
+        required: true
+      - name:  name 
+        in: body
+        type: string
+        required: true
+      - name: age
+        in: body
+        type: interger
+        required: true
+      - name:  email 
+        in: body
+        type: string
+        required: true
+      - name: phone
+        in: body
+        type: interger
+        required: true
+      - name:  password 
+        in: body
+        type: string
+        required: true
+      - name: cep
+        in: body
+        type: interger
+        required: true
+      - name: street
+        in: body
+        type: string
+        required: true
+      - name: district
+        in: body
+        type: string
+        required: false
+      - name: complement
+        in: body
+        type: string
+        required: false
+      - name: number-street
+        in: body
+        type: interger
+        required: true
+      
+    definitions:
+      city_id:
+        type: interget
+      gender_id: 
+        type: interger
+      role_id:
+        type: interger
+      name: 
+        type: string
+      age:
+        type: interger
+      email: 
+        type: string
+      phone:
+        type: interger
+      password:
+        type: string
+      cep:
+        type: interger
+      street:
+        type: string
+      district:
+        type: string
+      complement:
+        type: string
+      number-street:
+        type: interger
+    responses:
+        201:
+            description: Criado com sucesso
+        400:
+            description: Invalido
+        403:
+            description: Error permission
+    """
     data = request.get_json()
     response = create_user(data)
     
@@ -129,40 +272,178 @@ def create():
 @user.route('/', methods = ["GET"])
 @requires_access_level(["READ"])
 def get_user_by_name():
-  page =  request.args.get('page', 1, type=int)
-  per_page =  20
-  pager = User.query.paginate(page, per_page, error_out=False)
+    """Example endpoint get in the database user 
+    ---
+    parameters:
+      - name: name
+        in: body
+        type: string
+        required: true
+    definitions:
+        id:
+            type: interger
+        city_id:
+            type: interget
+        gender_id: 
+            type: interger
+        role_id:
+            type: interger
+        name: 
+            type: string
+        age:
+            type: interger
+        email: 
+            type: string
+        phone:
+            type: interger
+        password:
+            type: string
+        cep:
+            type: interger
+        street:
+            type: string
+        district:
+            type: string
+        complement:
+            type: string
+        number-street:
+            type: interger
+    responses:
+        200:
+            description: Sucesso
+        204:
+            description: No content
+        403:
+            description: Error permission
+    """
+    page =  request.args.get('page', 1, type=int)
+    per_page =  20
+    pager = User.query.paginate(page, per_page, error_out=False)
 
-  if not request.args.get('name'):
-    users = users_share_schema.dump(pager.items)
-    result = [format_print_user(result) for result in users]
+    if not request.args.get('name'):
+        users = users_share_schema.dump(pager.items)
+        result = [format_print_user(result) for result in users]
+
+        return jsonify({
+            'Status': 'Sucesso',
+            'Dados': result
+        }), 200
+  
+    user_query = User.query.filter(User.name.ilike('%' + request.args.get('name') + '%')).all()
+    user = users_share_schema.dump(user_query)
+
+    if not user:
+        return Response(
+        response=jsonify({"message": "Usuario nao encontrado."}),
+        status=204,
+        mimetype='application/json'
+        )
+    
+    result = [format_print_user(result) for result in user]
 
     return jsonify({
         'Status': 'Sucesso',
         'Dados': result
     }), 200
-  
-  user_query = User.query.filter(User.name.ilike('%' + request.args.get('name') + '%')).all()
-  user = users_share_schema.dump(user_query)
-
-  if not user:
-    return Response(
-      response=jsonify({"message": "Usuario nao encontrado."}),
-      status=204,
-      mimetype='application/json'
-    )
-  
-  result = [format_print_user(result) for result in user]
-
-  return jsonify({
-      'Status': 'Sucesso',
-      'Dados': result
-  }), 200
 
 
 @user.route("/<int:id>", methods=["PATCH"])
 @requires_access_level(["UPDATE"])
 def update_user_by_id(id):
+  """Example endpoint update in the database a user
+    This is using docstrings for specifications.
+    ---
+    parameters:
+      - name: id
+        in: body
+        type: interger
+        required: false
+      - name: city_id
+        in: body
+        type: interger
+        required: true
+      - name:  gender_id 
+        in: body
+        type: interger
+        required: false
+      - name: role_id
+        in: body
+        type: interger
+        required: false
+      - name:  name 
+        in: body
+        type: string
+        required: false
+      - name: age
+        in: body
+        type: interger
+        required: false
+      - name:  email 
+        in: body
+        type: string
+        required: false
+      - name: phone
+        in: body
+        type: interger
+        required: false
+      - name:  password 
+        in: body
+        type: string
+        required: false
+      - name: cep
+        in: body
+        type: interger
+        required: false
+      - name: street
+        in: body
+        type: string
+        required: false
+      - name: district
+        in: body
+        type: string
+        required: false
+      - name: complement
+        in: body
+        type: string
+        required: false
+      - name: number-street
+        in: body
+        type: interger
+        required: false
+      
+    definitions:
+      city_id:
+        type: interget
+      gender_id: 
+        type: interger
+      role_id:
+        type: interger
+      name: 
+        type: string
+      age:
+        type: interger
+      email: 
+        type: string
+      phone:
+        type: interger
+      password:
+        type: string
+      cep:
+        type: interger
+      street:
+        type: string
+      district:
+        type: string
+      complement:
+        type: string
+      number-street:
+        type: interger
+    responses:
+      200:
+        description: Criado com sucesso
+      400:
+        description: Invalido
+    """    
   user = get_user_by_id(id)
   data = request.get_json()
   list_keys = ["role_id", "gender_id", "city_id", "age", "name", "email", "phone", "password", "cep", "street", "district", "number_street", "complement", "landmark"]
