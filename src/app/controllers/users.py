@@ -12,6 +12,7 @@ from werkzeug.utils import redirect
 
 from src.app import DB, MA
 from src.app.middlewares.auth import logged_in, requires_access_level
+from src.app.models.schemas.user_schema import user_create_schema
 from src.app.models.user import User, user_share_schema, users_share_schema
 from src.app.services.users_service import (create_user, format_print_user,
                                             get_user_by_email, get_user_by_id,
@@ -117,74 +118,19 @@ def callback():
 def logout():
 
     session.clear()
-    return Response(
-        response=json.dumps({"message": "Você foi deslogado."}),
-        status=202,
-        mimetype="application/json",
-    )
+    return jsonify({"message": "Você foi deslogado"}), 200
 
 
 @user.route("/", methods=["POST"])
 @requires_access_level(["READ", "WRITE", "UPDATE", "DELETE"])
 def create():
-    list_keys = [
-        "city_id",
-        "gender_id",
-        "role_id",
-        "name",
-        "age",
-        "email",
-        "phone",
-        "password",
-        "cep",
-        "street",
-        "district",
-        "number_street",
-    ]
-    data = exist_key(request.get_json(), list_keys)
-    if 'error' in data:
-        return jsonify(data), 400
+    data = request.get_json()
+    response = create_user(data)
     
-    exist_user = get_user_by_email(data["complement"])
-        
-    if exist_user:
-          return jsonify({"error": "Usuário já cadastrado"}), 400
-
-    complement = None
-    landmark = None
-
-    if "complement" in data:
-        complement = data["complement"]
-
-    if "landmark" in data:
-        landmark = data["landmark"]
-
-    response = create_user(
-        data["city_id"],
-        data["gender_id"],
-        data["role_id"],
-        data["name"],
-        data["age"],
-        data["email"],
-        data["phone"],
-        data["password"],
-        data["cep"],
-        data["street"],
-        data["district"],
-        complement,
-        landmark,
-        data["number_street"],
-    )
-
     if "error" in response:
-        return Response(
-            response=json.dumps(response), status=400, mimetype="application/json"
-        )
+        return jsonify(response), 400
 
-    return Response(
-        response=json.dumps(response), status=201, mimetype="application/json"
-    )
-
+    return jsonify(response), 201
 
 @user.route("/<int:id>", methods=["GET"])
 @requires_access_level(["READ"])
