@@ -19,8 +19,10 @@ class Inventory(DB.Model):
     template = DB.Column(DB.String(255), nullable=False)
     description = DB.Column(DB.String(1000), nullable=False)
     value = DB.Column(DB.Float, nullable=False)
-    
-    product_category = DB.relationship("Product_Categories", foreign_keys=[product_category_id])
+
+    product_category = DB.relationship(
+        "Product_Categories", foreign_keys=[product_category_id]
+    )
     user = DB.relationship("User", foreign_keys=[user_id])
 
     @classmethod
@@ -49,10 +51,13 @@ class Inventory(DB.Model):
         return inventory
 
     def update(self, data):
-        for key, value in data.items():
-            setattr(self, key, value)
-        self.save()
-        return self
+        try:
+            for key, value in data.items():
+                setattr(self, key, value)
+            self.save()
+            return self
+        except Exception:
+            return {'error': 'Erro ao atualizar o produto'}
 
     def save(self):
         DB.session.add(self)
@@ -61,21 +66,18 @@ class Inventory(DB.Model):
     def format(self):
         return {
             "id": self.id,
-            "product_category_id": self.product_category_id,
-            "user_id": self.user_id,
             "product_code": self.product_code,
             "title": self.title,
-            "value": self.value,
-            "brand": self.brand,
-            "template": self.template,
-            "description": self.description,
-            "user_name": self.user.name if self.user else 'Na empresa',
-            "user_id": self.user.id if self.user else None,
+            "product_category": self.product_category.name,
+            "user": {
+                "name": self.user.name if self.user else "Na empresa",
+                "id": self.user.id if self.user else None,
+            },
         }
 
 
 class InventorySchema(MA.Schema):
-    product_categories = MA.Nested(product_category_share_schema)
+    product_category = MA.Nested(product_category_share_schema)
     user = MA.Nested(user_share_schema)
 
     class Meta:
@@ -89,7 +91,6 @@ class InventorySchema(MA.Schema):
             "brand",
             "template",
             "description",
-            
         )
 
 

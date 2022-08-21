@@ -21,7 +21,7 @@ inventory = [
     ]
 users = [
     {"city_id": 1566, "gender_id" : 1, "role_id" : 1 , "name" : "João Victor", 
-    "age" : "1996-04-08" , "email" : 'joao@email.com',"phone" : '48999999999', "password" : "Abcd@123",
+    "age" : "1996-04-08" , "email" : 'joao@email.com',"phone" : '48999999999', "password" : "senha",
     "cep" : 80130780, "street" : "Almeida street", "district" : "Capoeiras", "complement" : None,
     "landmark" : None, "number_street" : 210},
 
