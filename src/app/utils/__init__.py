@@ -1,6 +1,7 @@
 import locale
 import random
 import re
+from datetime import date, datetime
 
 from flask import current_app
 from jwt import encode
@@ -65,3 +66,9 @@ def excludeNone(dict):
                 excludeNone(dict[key])
             if not dict[key]:
                 del dict[key]
+
+def format_date(str_date):
+    date_object = datetime.strptime(str_date, '%d/%m/%Y')
+    date_object = date_object.isoformat()
+    print(date_object)
+    return str(date_object)

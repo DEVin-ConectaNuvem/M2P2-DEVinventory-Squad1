@@ -157,7 +157,6 @@ def populate_db_inventory():
             for key, value in data.items():
                 data_products.append(value)
 
-        print(data_products[randint(1 , 9)])
         while number_seed_limit > 0:
             for index in range(number_seed_limit):
                 if len(data_products) > 0:
