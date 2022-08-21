@@ -12,7 +12,6 @@ from werkzeug.utils import redirect
 
 from src.app import DB, MA
 from src.app.middlewares.auth import logged_in, requires_access_level
-from src.app.models.schemas.user_schema import user_create_schema
 from src.app.models.user import User, user_share_schema, users_share_schema
 from src.app.services.users_service import (create_user, format_print_user,
                                             get_user_by_email, get_user_by_id,
@@ -131,6 +130,7 @@ def create():
         return jsonify(response), 400
 
     return jsonify(response), 201
+
 
 @user.route("/<int:id>", methods=["GET"])
 @requires_access_level(["READ"])
