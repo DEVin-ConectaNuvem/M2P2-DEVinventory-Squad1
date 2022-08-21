@@ -51,3 +51,11 @@ def check_email_validate(email):
         return True
     else:
         return False
+
+def excludeNone(dict):
+    for key in list(dict):
+        if key in dict:
+            if type(dict[key]) == dict:
+                excludeNone(dict[key])
+            if not dict[key]:
+                del dict[key]

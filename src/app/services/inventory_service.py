@@ -1,4 +1,4 @@
-from src.app.models.inventory import Inventory
+from src.app.models.inventory import Inventory, inventory_share_schema
 
 
 def create_product(product_category_id, user_id,product_code, title, value, brand, template, description):
@@ -13,8 +13,9 @@ def create_product(product_category_id, user_id,product_code, title, value, bran
             template=template,
             description=description)
         
-
-        return {'message': 'Produto criado com sucesso'}
+        result = inventory_share_schema.dump(inventory)
+            
+        return result
     
     except Exception as e:
         return {'error': str(e)}
@@ -28,10 +29,10 @@ def verifica_existencia_produto(product_code):
         else:
             return False
     except Exception as e:
-        return {'error': str(e)}
+        return {'error': f'Campo {str(e)} não informado no body da requisição'}
     
 def valida_valor_produto(value):
-    if value < 0:
+    if value <= 0:
         return False
     else:
         return True
