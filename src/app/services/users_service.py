@@ -32,25 +32,10 @@ def login_user(email: str, password: str):
 def create_user(data):
     try:
         user_create_schema.load(data)
+        new_user = User.seed(data)
+        result = user_share_schema.dump(new_user)
 
-        User.seed(
-            data["city_id"],
-            data["gender_id"],
-            data["role_id"],
-            data["name"],
-            data["age"],
-            data["email"],
-            data["phone"],
-            data["password"],
-            data["cep"],
-            data["street"],
-            data["district"],
-            data["complement"],
-            data["landmark"],
-            data["number_street"],
-        )
-
-        return {"message": "Usuário foi criado com sucesso."}
+        return result
     except Exception as e:
         return {"error": f"{e}", "status_code": 500}
 

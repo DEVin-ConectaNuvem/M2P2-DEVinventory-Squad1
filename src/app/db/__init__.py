@@ -16,9 +16,6 @@ from src.app.models.state import State, states_share_schema
 from src.app.models.user import User, users_share_schema
 from src.app.utils import is_table_empty, random_or_none
 
-inventory = [
-    {""}
-    ]
 users = [
     {"city_id": 1566, "gender_id" : 1, "role_id" : 1 , "name" : "João Victor", 
     "age" : "1996-04-08" , "email" : 'joao@email.com',"phone" : '48999999999', "password" : "senha",
@@ -58,7 +55,7 @@ def populate_db_state():
         country = Country.query.first()
         country_dict = country_share_schema.dump(country)
         states_data = requests.get("https://servicodados.ibge.gov.br/api/v1/localidades/estados")
-        for stateObject in states_data.json(): # For para criar dados em massa dos estados
+        for stateObject in states_data.json():
             State.seed(
             country_dict['id'],
             stateObject['nome'],
@@ -139,11 +136,7 @@ def populate_db_role():
 def populate_db_user():
     if is_table_empty(User.query.first(), 'users'):
         for user in users:
-            User.seed(
-                user['city_id'], user['gender_id'], user['role_id'],  user['name'], user['age'],
-                user['email'], user['phone'], user['password'], user['cep'], user['street'], user['district'],
-                user['complement'], user['landmark'], user['number_street']
-            )
+            User.seed(user)
         print("Users populated")
 
 def populate_db_inventory():

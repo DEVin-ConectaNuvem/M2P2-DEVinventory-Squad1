@@ -79,32 +79,27 @@ def callback():
     user = get_user_by_email(user_google_dict["email"])
 
     if "error" in user:
-        user = User(
-            city_id=1,
-            gender_id=1,
-            role_id=3,
-            name=user_google_dict["name"],
-            age=None,
-            email=user_google_dict["email"],
-            phone=None,
-            password='senha123',
-            cep=None,
-            street=None,
-            district=None,
-            complement=None,
-            landmark=None,
-            number_street=None,
-        )
-        DB.session.add(user)
-        DB.session.commit()
-
-        user = user_share_schema.dump(user)
-
+        new_user = {
+            'city_id':1,
+            'gender_id':1,
+            'role_id':3,
+            'name':user_google_dict["name"],
+            'age':None,
+            'email':user_google_dict["email"],
+            'phone':None,
+            'password':'senha123',
+            'cep':None,
+            'street':None,
+            'district':None,
+            'complement':None,
+            'landmark':None,
+            'number_street':None
+        }
+        user = create_user(new_user)
+    
     user_google_dict["user_id"] = user["id"]
     user_google_dict["roles"] = user["roles"]
-
     session["google_id"] = user_google_dict.get("sub")
-
     del user_google_dict["aud"]
     del user_google_dict["azp"]
 
@@ -115,7 +110,6 @@ def callback():
 
 @user.route("/logout", methods=["POST"])
 def logout():
-
     session.clear()
     return jsonify({"message": "Você foi deslogado"}), 200
 
