@@ -1,6 +1,7 @@
 import locale
 import random
 import re
+from datetime import date, datetime
 
 from flask import current_app
 from jwt import encode
@@ -14,7 +15,6 @@ def is_table_empty(query, table):
         print(f"{table} is populated!")
         return False
 
-# verificar se todas as chaves obrigatorias estão sendo enviadas
 def exist_key(request_json,list_keys):
     keys_missing = []
 
@@ -31,6 +31,13 @@ def exist_key(request_json,list_keys):
 def generate_jwt(payload):
     token = encode(payload, current_app.config["SECRET_KEY"], "HS256")
 
+    return token
+
+def retrieve_token(request):
+    token = request.headers.get("Authorization")
+    if token:
+        token = token.split(" ")[1]
+        
     return token
 
 def random_or_none():
@@ -51,3 +58,17 @@ def check_email_validate(email):
         return True
     else:
         return False
+
+def excludeNone(dict):
+    for key in list(dict):
+        if key in dict:
+            if type(dict[key]) == dict:
+                excludeNone(dict[key])
+            if not dict[key]:
+                del dict[key]
+
+def format_date(str_date):
+    date_object = datetime.strptime(str_date, '%d/%m/%Y')
+    date_object = date_object.isoformat()
+    print(date_object)
+    return str(date_object)

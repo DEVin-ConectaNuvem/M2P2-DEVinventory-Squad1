@@ -20,36 +20,27 @@ class Inventory(DB.Model):
     description = DB.Column(DB.String(1000), nullable=False)
     value = DB.Column(DB.Float, nullable=False)
 
+    product_category = DB.relationship(
+        "Product_Categories", foreign_keys=[product_category_id]
+    )
+    user = DB.relationship("User", foreign_keys=[user_id])
+
     @classmethod
-    def seed(
-        cls,
-        product_category_id,
-        user_id,
-        product_code,
-        title,
-        brand,
-        template,
-        description,
-        value,
-    ):
-        inventory = Inventory(
-            product_category_id=product_category_id,
-            user_id=user_id,
-            product_code=product_code,
-            title=title,
-            brand=brand,
-            template=template,
-            description=description,
-            value=value,
-        )
+    def seed(cls, data):
+        inventory = Inventory()
+        for key, value in data.items():
+            setattr(inventory, key, value)
         inventory.save()
         return inventory
 
     def update(self, data):
-        for key, value in data.items():
-            setattr(self, key, value)
-        self.save()
-        return self
+        try:
+            for key, value in data.items():
+                setattr(self, key, value)
+            self.save()
+            return self
+        except Exception:
+            return {"error": "Erro ao atualizar o produto"}
 
     def save(self):
         DB.session.add(self)
@@ -58,20 +49,19 @@ class Inventory(DB.Model):
     def format(self):
         return {
             "id": self.id,
-            "product_category_id": self.product_category_id,
-            "user_id": self.user_id,
             "product_code": self.product_code,
             "title": self.title,
-            "value": self.value,
-            "brand": self.brand,
-            "template": self.template,
-            "description": self.description,
+            "product_category": self.product_category.name,
+            "user": {
+                "name": self.user.name if self.user else "Na empresa",
+                "id": self.user.id if self.user else None,
+            },
         }
 
 
 class InventorySchema(MA.Schema):
     product_category = MA.Nested(product_category_share_schema)
-    user_id = MA.Nested(user_share_schema)
+    user = MA.Nested(user_share_schema)
 
     class Meta:
         fields = (

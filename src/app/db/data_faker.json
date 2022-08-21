@@ -1,0 +1,72 @@
+{
+	"1":{"product_category_id":1,
+	"title":"Câmera USB 1080p",
+	"value":107.17,
+	"brand":"Liyes",
+	"template":"https://m.media-amazon.com/images/I/61eWYcwdaWL._AC_SL1500_.jpg",
+	"description":"Câmera USB 1080p, câmera com microfone HD para computadores desktop"},
+	"2":{
+	"product_category_id":1,
+	"title":"Computador I5",
+	"value":927,
+	"brand":"Gmm info",
+	"template":"https://m.media-amazon.com/images/I/61GiE2virML._AC_SL1102_.jpg",
+	"description":"Computador Intel Core I5 8gb 240gb Ssd"
+	},
+	"3":{
+	"product_category_id":4,
+	"title":"Cadeira Escritório Presidente",
+	"value":1119.90,
+	"brand":"Conforsit",
+	"template":"https://m.media-amazon.com/images/I/51Rg2X9CF5L._AC_SL1000_.jpg",
+	"description":"Cadeira Escritório Presidente Alta Back System Lyon Marrom"
+	},
+	"4":{
+	"product_category_id":2,
+	"title":"iPhone 12",
+	"value":4409.10,
+	"brand":"Apple",
+	"template":"https://m.media-amazon.com/images/I/41kBmL3zaZL._AC_SL1000_.jpg",
+	"description":"Apple iPhone 12 (64 GB) - Preto"
+	},
+	"5":{
+	"product_category_id":3,
+	"title":"Samsung Tablet Android Galaxy Tab A8",
+	"value":1839,
+	"brand":"Samsung",
+	"template":"https://m.media-amazon.com/images/I/61krikJxTmL._AC_SL1200_.jpg",
+	"description":"Samsung Tablet Android Galaxy Tab A8, tela LCD de 10,5"
+	},
+	"6":{
+	"product_category_id":5,
+	"title":"Escrivaninha Trevalla",
+	"value":287,
+	"brand":"Trevalla",
+	"template":"https://m.media-amazon.com/images/I/71b3InIEJyL._AC_SL1200_.jpg",
+	"description":"Escrivaninha Trevalla Kuadra Me150-E10 Industrial 150cm Preto Onix"
+	},
+	"7":{
+	"product_category_id":6,
+	"title":"Teclado sem fio Logitech",
+	"value":699,
+	"brand":"Logitech",
+	"template":"https://m.media-amazon.com/images/I/51Gn+-NV5iL._AC_SL1000_.jpg",
+	"description":"Teclado sem fio Logitech MX Keys com Iluminação Inteligente, USB Unifying ou Bluetooth para até 3 dispositivos, Recarregável"
+	},
+	"8":{
+	"product_category_id":7,
+	"title":"Mouse Gaming Razer DeathAdder",
+	"value":218.99,
+	"brand":"Logitech",
+	"template":"https://m.media-amazon.com/images/I/61doJ9AKCPL._AC_SL1500_.jpg",
+	"description":"Mouse Gaming Razer DeathAdder v2 - Iluminação Chroma RGB - Preto Clássico"
+	},
+	"9":{
+	"product_category_id":8,
+	"title":"Smart TV LED 43",
+	"value":1169,
+	"brand":"Samsung",
+	"template":"https://m.media-amazon.com/images/I/61-RpcaVQcL._AC_SL1000_.jpg",
+	"description":"Samsung Smart TV 43 Crystal UHD 4K BU8000 2022 43"
+	}
+}

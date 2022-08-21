@@ -134,6 +134,7 @@ Executar o comando: <i>poetry run flask run</i>
  <li>Retornar statísticas e status 200 (OK)</li>
  </ul>
  
+ 
 <b style="font-size:30px">PATCH/inventory</b>
 
 <b>Parametros de entrada:</b>

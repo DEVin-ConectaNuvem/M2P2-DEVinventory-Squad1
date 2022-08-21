@@ -40,23 +40,10 @@ class User(DB.Model):
         return check_password_hash(self.password_hash, password)
 
     @classmethod
-    def seed(cls, city_id, gender_id, role_id,  name, age, email, phone, password, cep, street, district, complement=None, landmark=None, number_street=None):
-        user = User(
-            city_id=city_id,
-            gender_id=gender_id,
-            role_id=role_id,
-            name=name,
-            age=age,
-            email=email,
-            phone=phone,
-            password=password,
-            cep=cep,
-            street=street,
-            district=district,
-            complement=complement,
-            landmark=landmark,
-            number_street=number_street
-        )
+    def seed(cls, data):
+        user = User()
+        for key, value in data.items():
+            setattr(user, key, value)
         user.save()
         return user
     
