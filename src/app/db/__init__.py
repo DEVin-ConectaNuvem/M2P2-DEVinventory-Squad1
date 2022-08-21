@@ -1,4 +1,5 @@
-import random
+from json import loads
+from random import randint
 
 import requests
 from sqlalchemy.sql.expression import func
@@ -147,19 +148,31 @@ def populate_db_user():
 
 def populate_db_inventory():
     if is_table_empty(Inventory.query.first(), 'inventories'):
-        products = requests.get('https://fakestoreapi.com/products')
-        products = products.json() + products.json()
-        for index, product in enumerate(products):
-            Inventory.seed(
-                product_category_id=random.randint(1 , 7),
-                user_id=random_or_none(),
-                title=product['title'],
-                product_code=index + 1,
-                value=float(product['price']),
-                brand='lorem',
-                template='url',
-                description=product['description']
-            )
+        number_seed_limit = 30
+        data_products = []
+        
+        with open("src/app/db/data_faker.json") as f:
+            data = loads(f.read())
+            
+            for key, value in data.items():
+                data_products.append(value)
+
+        print(data_products[randint(1 , 9)])
+        while number_seed_limit > 0:
+            for index in range(number_seed_limit):
+                if len(data_products) > 0:
+                    data = data_products[randint(0 , 8)]
+                    Inventory.seed(
+                        product_category_id=data['product_category_id'],
+                        user_id=random_or_none(),
+                        title=data['title'],
+                        product_code=index + 1,
+                        value=float(data['value']),
+                        brand=data['brand'],
+                        template=data['template'],
+                        description=data['description']
+                )
+                    number_seed_limit -= 1
         print("Populating inventory done")
 
 # Função final que vai chamar as demais funções de inserção de dados
