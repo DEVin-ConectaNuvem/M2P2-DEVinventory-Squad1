@@ -14,7 +14,6 @@ def is_table_empty(query, table):
         print(f"{table} is populated!")
         return False
 
-# verificar se todas as chaves obrigatorias estão sendo enviadas
 def exist_key(request_json,list_keys):
     keys_missing = []
 
@@ -31,6 +30,13 @@ def exist_key(request_json,list_keys):
 def generate_jwt(payload):
     token = encode(payload, current_app.config["SECRET_KEY"], "HS256")
 
+    return token
+
+def retrieve_token(request):
+    token = request.headers.get("Authorization")
+    if token:
+        token = token.split(" ")[1]
+        
     return token
 
 def random_or_none():

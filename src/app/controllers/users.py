@@ -11,16 +11,12 @@ from google_auth_oauthlib.flow import Flow
 from werkzeug.utils import redirect
 
 from src.app import DB, MA
-from src.app.utils import exist_key, generate_jwt
-from src.app.middlewares.auth import requires_access_level
+from src.app.middlewares.auth import logged_in, requires_access_level
 from src.app.models.user import User, user_share_schema, users_share_schema
-
 from src.app.services.users_service import (create_user, format_print_user,
                                             get_user_by_email, get_user_by_id,
                                             login_user, validate_fields_nulls)
-
 from src.app.utils import exist_key, generate_jwt
-
 
 user = Blueprint("user", __name__, url_prefix="/user")
 
@@ -38,18 +34,17 @@ flow = Flow.from_client_secrets_file(
 
 
 @user.route("/login", methods=["POST"])
+@logged_in()
 def login():
+    
     list_keys = ["email", "password"]
     data = exist_key(request.get_json(), list_keys)
+    if 'error' in data:
+        return jsonify(data), 400
 
     response = login_user(data["email"], data["password"])
-
     if "error" in response:
-        return Response(
-            response=json.dumps({"error": response["error"]}),
-            status=401,
-            mimetype="application/json",
-        )
+        return jsonify(response), 400
 
     return Response(
         response=json.dumps(response), status=200, mimetype="application/json"
@@ -130,9 +125,8 @@ def logout():
 
 
 @user.route("/", methods=["POST"])
-#@requires_access_level(["READ", "WRITE", "UPDATE", "DELETE"])
+@requires_access_level(["READ", "WRITE", "UPDATE", "DELETE"])
 def create():
-
     list_keys = [
         "city_id",
         "gender_id",
@@ -147,8 +141,14 @@ def create():
         "district",
         "number_street",
     ]
-
     data = exist_key(request.get_json(), list_keys)
+    if 'error' in data:
+        return jsonify(data), 400
+    
+    exist_user = get_user_by_email(data["complement"])
+        
+    if exist_user:
+          return jsonify({"error": "Usuário já cadastrado"}), 400
 
     complement = None
     landmark = None
@@ -186,21 +186,21 @@ def create():
     )
 
 
-@user.route("/", methods=["GET"])
-# @requires_access_level("READ")
-def get_user_by_name():
+@user.route("/<int:id>", methods=["GET"])
+@requires_access_level(["READ"])
+def get_user_by_name(id):
     page = request.args.get("page", 1, type=int)
     per_page = 20
     pager = User.query.paginate(page, per_page, error_out=False)
 
-    if not request.args.get("name"):
+    if id is None or id == 0:
         users = users_share_schema.dump(pager.items)
         result = [format_print_user(result) for result in users]
 
         return jsonify({"Status": "Sucesso", "Dados": result}), 200
 
     user_query = User.query.filter(
-        User.name.ilike("%" + request.args.get("name") + "%")
+        User.name.ilike("%" + id + "%")
     ).all()
 
     user = users_share_schema.dump(user_query)
@@ -218,6 +218,7 @@ def get_user_by_name():
 
 
 @user.route("/<int:id>", methods=["PATCH"])
+@requires_access_level(["UPDATE"])
 def update_user_by_id(id):
   user = get_user_by_id(id)
   data = request.get_json()

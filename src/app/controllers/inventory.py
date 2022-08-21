@@ -4,6 +4,7 @@ from flask import Blueprint, abort, jsonify, request
 from flask.wrappers import Response
 
 from src.app import DB
+from src.app.middlewares.auth import requires_access_level
 from src.app.models.inventory import (Inventory, inventories_share_schema,
                                       inventory_share_schema)
 from src.app.models.user import User
@@ -16,6 +17,7 @@ inventory = Blueprint("inventory", __name__, url_prefix="/inventory")
 
 
 @inventory.route("/", methods=["POST"])
+@requires_access_level(["WRITE"])
 def add_new_product():
     if not request.json:
         abort(400)
@@ -65,6 +67,7 @@ def add_new_product():
 
 
 @inventory.route("/", methods=["GET"])
+@requires_access_level(["READ"])
 def get_product_by_user_name():
     page = request.args.get("page", 1, type=int)
     per_page = 20
@@ -99,6 +102,7 @@ def get_product_by_user_name():
 
 
 @inventory.route("/results", methods=["GET"])
+@requires_access_level(["READ"])
 def get_all_products():
     products = Inventory.query.all()
     users = User.query.all()
@@ -122,6 +126,7 @@ def get_all_products():
 
 
 @inventory.route("/<int:id>", methods=["PATCH"])
+@requires_access_level(["UPDATE"])
 def update_product(id):
     if id is None or id == 0:
         abort(400)
