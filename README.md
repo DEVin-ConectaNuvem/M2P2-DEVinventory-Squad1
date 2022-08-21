@@ -113,7 +113,7 @@ Executar o comando: <i>poetry run flask run</i>
  </ul>
  
 
-<b style="font-size:30px">GET/inventory</b> 
+<b style="font-size:30px">GET/inventory/results</b> 
 
 <b>Sem parametros de entrada</b>
 
@@ -134,7 +134,7 @@ Executar o comando: <i>poetry run flask run</i>
  <li>Retornar statísticas e status 200 (OK)</li>
  </ul>
  
-<b style="font-size:30px">PATH/inventory</b>
+<b style="font-size:30px">PATCH/inventory</b>
 
 <b>Parametros de entrada:</b>
 <ul>
@@ -198,6 +198,31 @@ Executar o comando: <i>poetry run flask run</i>
  <li>Telefone deve conter 11 digitos sem letras ou caracter especial</li>
  <li>Retornar status 201 quando o item for criado</li>
  </ul>
+ 
+ <b style="font-size:30px">PATCH/user</b>
+
+<b>Parametros de entrada:</b>
+<ul>
+ <li>id (obrigatório)</li>
+ </ul>
+ 
+ <b>Saída:</b>
+ 
+ <ul>
+ <li>Sucesso, 204 (No Content)</li>
+ <li>Error id não encontrado, 404</li>
+ <li>Error premission, 403 (forbidden)</li>
+ </ul>
+ 
+ <b>Regras de negócio:</b>
+<ul>
+ <li>Permissão UPDATE</li>
+ <li>Campos preenchidos não podem ser alterados para campos vazios</li>
+ <li>Se id não encontrado retornar erro</li> 
+ <li>Respeitar validações das models</li>
+ <li>Retornar status 204 quando o usuário for alterado</li>
+ </ul>
+
 
 <b style="font-size:30px">POST/user/auth/google</b>
 
