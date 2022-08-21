@@ -9,10 +9,10 @@ from src.app.utils import excludeNone, generate_jwt
 
 def login_user(email: str, password: str):
     try:
-        user = User.query.filter_by(email=email).first_or_404()
+        user = User.query.filter_by(email=email).first()
 
         if not user or not user.validate_password(password):
-            return {"error": "Suas credênciais estão incorretas!", "status_code": 401}
+            return {"error": "Suas credenciais estão incorretas!", "status_code": 401}
 
         user_dict = user_share_schema.dump(user)
 
