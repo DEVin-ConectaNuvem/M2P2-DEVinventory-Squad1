@@ -161,16 +161,17 @@ def populate_db_inventory():
             for index in range(number_seed_limit):
                 if len(data_products) > 0:
                     data = data_products[randint(0 , 8)]
-                    Inventory.seed(
-                        product_category_id=data['product_category_id'],
-                        user_id=random_or_none(),
-                        title=data['title'],
-                        product_code=index + 1,
-                        value=float(data['value']),
-                        brand=data['brand'],
-                        template=data['template'],
-                        description=data['description']
-                )
+                    new_product = {
+                        'product_category_id':data['product_category_id'],
+                        'user_id':random_or_none(),
+                        'title':data['title'],
+                        'product_code':index + 1,
+                        'value':float(data['value']),
+                        'brand':data['brand'],
+                        'template':data['template'],
+                        'description':data['description']
+                    }
+                    Inventory.seed(new_product)
                     number_seed_limit -= 1
         print("Populating inventory done")
 

@@ -26,27 +26,10 @@ class Inventory(DB.Model):
     user = DB.relationship("User", foreign_keys=[user_id])
 
     @classmethod
-    def seed(
-        cls,
-        product_category_id,
-        user_id,
-        product_code,
-        title,
-        brand,
-        template,
-        description,
-        value,
-    ):
-        inventory = Inventory(
-            product_category_id=product_category_id,
-            user_id=user_id,
-            product_code=product_code,
-            title=title,
-            brand=brand,
-            template=template,
-            description=description,
-            value=value,
-        )
+    def seed(cls, data):
+        inventory = Inventory()
+        for key, value in data.items():
+            setattr(inventory, key, value)
         inventory.save()
         return inventory
 
@@ -57,7 +40,7 @@ class Inventory(DB.Model):
             self.save()
             return self
         except Exception:
-            return {'error': 'Erro ao atualizar o produto'}
+            return {"error": "Erro ao atualizar o produto"}
 
     def save(self):
         DB.session.add(self)

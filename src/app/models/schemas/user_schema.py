@@ -6,25 +6,26 @@ from marshmallow import Schema, ValidationError, fields, pre_load, validates
 from src.app.models.city import City
 from src.app.models.gender import Gender
 from src.app.models.role import Role
+from src.app.models.schemas.error_messages import set_error_message
 from src.app.models.user import User
 from src.app.utils import format_date
 
 
 class UserCreateSchema(Schema):
-    city_id = fields.Integer(required=True, error_messages={"required": "Cidade é obrigatório."})
-    gender_id = fields.Integer(required=True, error_messages={"required": "Gênero é obrigatório."})
-    role_id = fields.Integer(required=True, error_messages={"required": "Função é obrigatório."})
-    name= fields.Str(required=True, error_messages={"required": "Nome é obrigatório."})
-    age= fields.DateTime(error_messages={"invalid": "A data informada está incorreta."})
-    email=fields.Email(required=True, error_messages={"required": "Email é obrigatório."})
-    phone=fields.Str()
-    password=fields.Str(required=True, error_messages={"required": "Senha é obrigatório."})
-    cep=fields.Str()
-    street=fields.Str()
-    district=fields.Str()
-    complement=fields.Str()
-    landmark=fields.Str()
-    number_street=fields.Integer()
+    city_id = fields.Integer(required=True, error_messages=set_error_message('city_id'))
+    gender_id = fields.Integer(required=True, error_messages=set_error_message('gender_id'))
+    role_id = fields.Integer(required=True, error_messages=set_error_message('role_id'))
+    name= fields.Str(required=True, error_messages=set_error_message('name'))
+    age= fields.DateTime(error_messages=set_error_message('age'))
+    email=fields.Email(required=True, error_messages=set_error_message('email'))
+    phone=fields.Str(error_messages=set_error_message('phone'))
+    password=fields.Str(required=True, error_messages=set_error_message('password'))
+    cep=fields.Str(error_messages=set_error_message('cep'))
+    street=fields.Str(error_messages=set_error_message('street'))
+    district=fields.Str(error_messages=set_error_message('district'))
+    complement=fields.Str(error_messages=set_error_message('complement'))
+    landmark=fields.Str(error_messages=set_error_message('landmark'))
+    number_street=fields.Integer(error_messages=set_error_message('number_street'))
     
     @pre_load
     def format_data(self, data, **kwargs):
