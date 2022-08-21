@@ -126,35 +126,38 @@ def create():
     return jsonify(response), 201
 
 
-@user.route("/<int:id>", methods=["GET"])
+@user.route('/', methods = ["GET"])
 @requires_access_level(["READ"])
-def get_user_by_name(id):
-    page = request.args.get("page", 1, type=int)
-    per_page = 20
-    pager = User.query.paginate(page, per_page, error_out=False)
+def get_user_by_name():
+  page =  request.args.get('page', 1, type=int)
+  per_page =  20
+  pager = User.query.paginate(page, per_page, error_out=False)
 
-    if id is None or id == 0:
-        users = users_share_schema.dump(pager.items)
-        result = [format_print_user(result) for result in users]
+  if not request.args.get('name'):
+    users = users_share_schema.dump(pager.items)
+    result = [format_print_user(result) for result in users]
 
-        return jsonify({"Status": "Sucesso", "Dados": result}), 200
+    return jsonify({
+        'Status': 'Sucesso',
+        'Dados': result
+    }), 200
+  
+  user_query = User.query.filter(User.name.ilike('%' + request.args.get('name') + '%')).all()
+  user = users_share_schema.dump(user_query)
 
-    user_query = User.query.filter(
-        User.name.ilike("%" + id + "%")
-    ).all()
+  if not user:
+    return Response(
+      response=jsonify({"message": "Usuario nao encontrado."}),
+      status=204,
+      mimetype='application/json'
+    )
+  
+  result = [format_print_user(result) for result in user]
 
-    user = users_share_schema.dump(user_query)
-
-    if not user:
-        return Response(
-            response=jsonify({"message": "Usuario nao encontrado."}),
-            status=204,
-            mimetype="application/json",
-        )
-
-    result = [format_print_user(result) for result in user]
-
-    return jsonify({"Status": "Sucesso", "Dados": result}), 200
+  return jsonify({
+      'Status': 'Sucesso',
+      'Dados': result
+  }), 200
 
 
 @user.route("/<int:id>", methods=["PATCH"])
