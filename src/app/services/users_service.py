@@ -29,9 +29,11 @@ def login_user(email: str, password: str):
         return {"error": f"{e}"}
 
 
-def create_user(data):
+def create_user(data, validate=True):
     try:
-        user_create_schema.load(data)
+        if validate:
+            user_create_schema.load(data)
+        
         new_user = User.seed(data)
         result = user_share_schema.dump(new_user)
 
