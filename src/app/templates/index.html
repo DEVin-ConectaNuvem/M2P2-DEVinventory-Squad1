@@ -8,9 +8,10 @@
 </head>
 <body>
     <h1 align="center">DEVinventory 👨‍💻 by DEVinSanes</h1>
-    <h3>Software de gestão de inventário de empresas</h3>
+    <hr>
+    <h3 align="center">Sistema de gestão de estoque para empresas</h3>
 
-    <p>O projeto Back-end desenvolvido durante o Módulo 2, 
+    <p>O projeto back-end desenvolvido durante o Módulo 2, 
        consiste no desenvolvimento de uma API em Python,
        usando Flask com SQLAlchemy</p>
 
@@ -26,35 +27,325 @@
         <li>Utilizar conhecimentos em SQL</li>
     </ul>
 
-    <h4>Pré requisitos ambiente</h4>
+    <h4>Pré-requisitos do ambiente</h4>
 
     <p>Instruções sobre instalação do Python no Windows:</p>
-    <a href="https://python.org.br/instalacao-windows/" target="_blank">Instalando o Python 3 no Windows</a>
+    <ul>
+        <li><a href="https://python.org.br/instalacao-windows/" target="_blank">Instalando o Python 3 no Windows</a></li>
+    </ul>
 
     <p>Instalar o Poetry através do comando abaixo via cmd do Windows:</p>
-    <span>$ curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python</span>
+    <ul>
+        <li>curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python</li>
+    </ul>
 
-
-    <h4>Configuração ambiente</h4>
+    <h4>Configuração do ambiente</h4>
     <ul>
         <li>Executar o comando: <i>poetry config --local virtualenvs.in-project true</i></li>
         <li>Executar o comando: <i>poetry install</i> para instalar as dependencias</li>
         <li>Criar um arquivo .env baseado no arquivo .env_example e colocar os campos necessários.</li>
     </ul>
 
-    <h4>Executar aplicação</h4>
-    <span>$ poetry run flask run</span>
-
-    <h4>Endpoints</h4>
+    <h4>Criar estrutura do banco de dados</h4>
     <ul>
-        <li><a href="http://localhost:5000/user" target="_blank">GET /user</a></li>
-        <li><a href="http://localhost:5000/inventory" target="_blank">GET /inventory</a></li>
-        <li><a href="http://localhost:5000/inventory/results" target="_blank">GET /inventory/results</a></li>
+        <li>poetry run flask db init</li>
+        <li>poetry run flask db migrate</li>
+        <li>poetry run flask db upgrade</li>
     </ul>
 
+    <h4>Popular as tabelas do banco de dados</h4>
+    <ul>
+        <li>poetry run flask populate_db</li>
+    </ul>    
 
+    <h4>Executar aplicação</h4>
+    <ul>
+        <li>poetry run flask run</li>
+    </ul>
+
+    <hr>
+    <h4 align="center">ENDPOINTS</h4>
+    <hr>
+    <b>Endpoint 1: /user/login (POST)</b>
+    <br><br>
+    <b>Parametros de entrada:</b>
+    <ul>
+        <li>email (obrigatório)</li>
+        <li>password  (obrigatório)</li>
+    </ul>    
+    <b>Saída:</b>    
+    <ul>
+        <li>Sucesso, 200 (token)</li>
+        <li>Error, 400 (se estiverem faltando qualquer um dos campos obrigatórios)</li>
+        <li>Error, 401 (se e-mail não existir no banco de dados ou senha incorreta)</li>
+    </ul>    
+    <b>Regras de negócio:</b>
+    <ul>
+        <li>Usuário deve estar desconectado</li>
+        <li>Todos os campos obrigatórios preenchidos</li>
+        <li>O email deve existir no banco</li> 
+        <li>Se email e/ou password estiverem incorretos, retornar erro ao efetuar login</li>
+        <li>Se todas as informações estiverem corretas, retornar token e status 200</li>
+    </ul>
+    <hr>
+
+    <!-- ------------------------------------------------------------------------------------- -->
+    
+    <b>Endpoint 2: /user/auth/google (POST)</b>
+    <br><br>
+    <b>Parametros de entrada:</b>
+    <ul>
+        <li>Sem parametros de entrada</li>
+    </ul>
+    <b>Saída:</b>    
+    <ul>
+        <li>Sucesso, 200</li>
+    </ul>    
+    <b>Regras de negócio:</b>
+    <ul>
+        <li>Usuário deve estar desconectado</li>
+        <li>Utilizar configuração OAuth2</li>
+        <li>Se todas as informações estiverem corretas, retornar url do redirecionamento da aplicação e status 200</li>
+    </ul>
+    <hr>
+    
+    <!-- ------------------------------------------------------------------------------------- -->
+    
+    <b>Endpoint 3: /user/callback (GET)</b>
+    <br><br>
+    <b>Parametros de entrada:</b>
+    <ul>
+        <li>Sem parametros de entrada</li>
+    </ul>
+    <b>Saída:</b>    
+    <ul>
+        <li>Redirecionamento</li>
+        <li>Cadastro do usuário no banco, caso não esteja cadastrado</li>
+    </ul>    
+    <b>Regras de negócio:</b>
+    <ul>
+        <li>Verificar se o email recebido está cadastrado no banco de dados, senão cadastrar</li>
+        <li>Redirecionar após validação dos valores enviados da url e do client do backend</li> 
+    </ul>
+    <hr>
+    
+    <!-- ------------------------------------------------------------------------------------- -->
+    
+    <b>Endpoint 4: /user (POST)</b>
+    <br><br>
+    <b>Parametros de entrada:</b>
+    <ul>
+        <li>city_id (obrigatório)</li>
+        <li>gender_id  (obrigatório)</li>
+        <li>role_id (obrigatório)</li> 
+        <li>name   (obrigatório)</li>
+        <li>age  (obrigatório)</li>
+        <li>email  (obrigatório)</li>
+        <li>phone  (obrigatório)</li>
+        <li>password  (obrigatório)</li>
+        <li>cep  (obrigatório)</li>
+        <li>street  (obrigatório)</li>
+        <li>number_street  (obrigatório)</li>
+        <li>district  (obrigatório)</li>
+        <li>complement  (opcional)</li>
+        <li>landmark  (opcional)</li>
+    </ul>    
+    <b>Saída:</b>    
+    <ul>
+        <li>Sucesso, 201 (created)</li>
+        <li>Error, 400</li>
+        <li>Error premission, 403 (forbidden)</li>
+    </ul>    
+    <b>Regras de negócio:</b>
+    <ul>
+        <li>Permissão READ, WRITE, UPDATE e DELETE (role = Administrador do sistema)</li>
+        <li>Todos os campos obrigatórios preenchidos</li>
+        <li>O email deve ser unico no banco</li> 
+        <li>Password criptrografado no banco de dados (regra na models) e conter 8 digitos, sendo pelo menos um caracter especial</li>
+        <li>Telefone deve conter 11 digitos sem letras ou caracter especial</li>
+        <li>Retornar status 201 quando o item for criado</li>
+    </ul>
+    <hr>
+    
+    <!-- ------------------------------------------------------------------------------------- -->
+    
+    <b>Endpoint 5: /user (GET)</b>
+    <br><br>
+    <b>Parametros de entrada:</b>
+    <ul>
+        <li>Name (Opcional)</li>
+    </ul>    
+    <b>Saída:</b>    
+    <ul>
+        <li>Sucesso, 200 (OK)</li>
+        <li>Error, 204 (No content)</li>
+        <li>Error permission, 403 (forbidden)</li>
+    </ul>    
+    <b>Regras de negócio:</b>
+    <ul>
+        <li>Permissão READ</li>
+        <li>Retornar todos os usuários tenham o mesmo nome (usar like)</li>
+        <li>Se não tiver parametros retornar todos os usuários de acordo com páginação</li>
+        <li>Utilizar paginação, retornando 20 usuários por página</li>
+        <li>Se nenhum resultado status 204 (No content)</li>
+        <li>Se encontrado o resultado retornar em JSON contendo: id, nome, email, phone, role.name e Status 200 (OK)</li>
+    </ul>
+    <hr>
+    
+    <!-- ------------------------------------------------------------------------------------- -->
+    
+    <b>Endpoint 6: /user/id (PATCH)</b>
+    <br><br>
+    <b>Parametros de entrada:</b>
+    <ul>
+        <li>Id (path param required)</li>
+    </ul>    
+    <b>Saída:</b>    
+    <ul>
+        <li>Sucesso, 204 (No content)</li>
+        <li>Error permission, 403 (forbidden)</li>
+        <li>Error, 404 (not found)</li>
+    </ul>    
+    <b>Regras de negócio:</b>
+    <ul>
+        <li>Permissão UPDATE</li>
+        <li>Usuário deve estar logado</li>
+        <li>Validar se o ID informado existe, caso contrário retornar erro 404</li>
+        <li>Os campos não podem ser alterados para valores vazios ou que não respeitem as validações da models (users)</li>
+        <li>Em caso de sucesso retornar o status 204 (No content)</li>
+    </ul>
+    <hr>
+
+    <!-- ------------------------------------------------------------------------------------- -->
+    
+    <b>Endpoint extra: /user/logout (POST)</b>
+    <br><br>
+    <b>Parametros de entrada:</b>
+    <ul>
+        <li>Sem parametros de entrada</li>
+    </ul>
+    <b>Saída:</b>    
+    <ul>
+        <li>Deslogado, 202</li>
+    </ul>    
+    <b>Regras de negócio:</b>
+    <ul>
+        <li>Limpa os dados da sessão: token e validações de login</li>
+    </ul>
+    <hr>
+    
+    <!-- ------------------------------------------------------------------------------------- -->
+    
+    <b>Endpoint 7: /inventory (POST)</b>
+    <br><br>
+    <b>Parametros de entrada:</b>
+    <ul>
+        <li>product_category_id (obrigatório)</li>
+        <li>user_id (opcional)</li>
+        <li>product_code (obrigatório)</li> 
+        <li>title (obrigatório)</li>
+        <li>value (obrigatório)</li>
+        <li>brand (obrigatório)</li>
+        <li>template (obrigatório)</li>
+        <li>description (obrigatório)</li>
+    </ul>    
+    <b>Saída:</b>    
+    <ul>
+        <li>Sucesso, 201 (created)</li>
+        <li>Error, 400</li>
+        <li>Error permission, 403 (forbidden)</li>
+    </ul>    
+    <b>Regras de negócio:</b>
+    <ul>
+        <li>Permissão WRITE</li>
+        <li>Todos os campos obrigatórios preenchidos</li>
+        <li>O código do produto deve ser unico</li> 
+        <li>Value maior que zero</li>
+        <li>Retornar status 201 quando o item for criado</li>
+    </ul>
+    <hr>
+    
+    <!-- ------------------------------------------------------------------------------------- -->
+    
+    <b>Endpoint 8: /inventory/id (PATCH)</b>
+    <br><br>
+    <b>Parametros de entrada:</b>
+    <ul>
+        <li>id (obrigatório)</li>
+        <li>Quaisquer camplos (opcional)</li>
+    </ul>    
+    <b>Saída:</b>    
+    <ul>
+        <li>Sucesso, 204 (No Content)</li>
+        <li>Error, 400</li>
+        <li>Error permission, 403 (forbidden)</li>
+    </ul>    
+    <b>Regras de negócio:</b>
+    <ul>
+        <li>Permissão UPDATE</li>
+        <li>É possível alterar todos os campos exceto: product_category_id e product_code, senão status 400</li>
+        <li>Respeitas as regras de negócio do endpoint POST</li>
+        <li>Ao atualizar item, retornar status 204 (No Content)</li>
+    </ul>
+    <hr>
+
+    <!-- ------------------------------------------------------------------------------------- -->
+    
+    <b>Endpoint 9: /inventory (GET)</b>
+    <br><br>
+    <b>Parametros de entrada:</b>
+    <ul>
+        <li>name (Opcional)</li>
+    </ul>    
+    <b>Saída:</b>    
+    <ul>
+        <li>Sucesso, 200 (OK)</li>
+        <li>Error, 204 (No content)</li>
+        <li>Error permission, 403 (forbidden)</li>
+    </ul>    
+    <b>Regras de negócio:</b>
+    <ul>
+        <li>Permissão READ</li>
+        <li>Retornar todos que tenham o mesmo titulo (usar like)</li>
+        <li>O código do produto deve ser unico</li> 
+        <li>Se não tiver parametros retornar todos os itens</li>
+        <li>Utilizar paginação, retornando 20 itens</li>
+        <li>Se user_id = null retornar id: None e name: "Na empresa"</li>
+        <li>Se nenhum resultado status 204 (No content)</li>
+        <li>Se encontrado o resultado retornar em JSON contendo: id, product_code, title, product_category, user e Status 200 (OK)</li>
+    </ul>
+    <hr>
+
+    <!-- ------------------------------------------------------------------------------------- -->
+    
+    <b>Endpoint 10: /inventory/results (GET)</b>
+    <br><br>
+    <b>Parametros de entrada:</b>
+    <ul>
+        <li>Sem parametros de entrada</li>
+    </ul>
+    <b>Saída:</b>    
+    <ul>
+        <li>Sucesso, 200 (OK)</li>
+        <li>Error premission, 403 (forbidden)</li>
+    </ul>    
+    <b>Regras de negócio:</b>
+    <ul>
+        <li>Permissão READ</li>
+        <li>Calcular numero de usuários</li>
+        <li>Calcular o número de itens</li> 
+        <li>Calcular o valor da soma de todos os itens.</li>
+        <li>Calcular quantos itens estão emprestados para usuários</li>
+        <li>Retornar statísticas e status 200 (OK)</li>
+    </ul>
+    <hr>
+    
+    <!-- ------------------------------------------------------------------------------------- -->
+  
     <h4>Time DEVinSanes</h4>
     <p>Somos os DEVinSanes, desenvolvedores insanos do sistema DEVinventory.</p>
+
+    <hr>
 
     <h4>Redes Sociais</h4>
 
@@ -68,6 +359,8 @@
         <li><a href="https://www.linkedin.com/in/wellyngton-caetano-dos-santos/" target="_blank"><i>Wellyngton Santos</i></a></li>
     </ul>
 
+    <hr>
+
     <h4>Links úteis</h4>
 
     <ul>
@@ -75,9 +368,11 @@
         <li><a href="https://python-poetry.org/docs/" target="_blank">Poetry</a></li>
     </ul>
 
-    <h4>Tecnologias utilizadas</h4>
+    <hr>
 
-    <p>
+    <h4 align="center">Tecnologias utilizadas</h4>
+
+    <p align="center">
         <img width="70px" height="70px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlalchemy/sqlalchemy-original-wordmark.svg" />
         <img width="65px" height="65px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original-wordmark.svg" />
         <img width="70px" height="70px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original-wordmark.svg" />
