@@ -2,9 +2,9 @@ from flask import Blueprint, abort, jsonify, request
 
 from src.app import DB
 from src.app.middlewares.auth import requires_access_level
-from src.app.models.inventory import Inventory, inventory_share_schema
+from src.app.models.inventory import Inventory
 from src.app.models.user import User
-from src.app.services.inventory_service import create_product
+from src.app.services.inventory_service import create_product, update_product
 from src.app.utils import format_currency
 
 inventory = Blueprint("inventory", __name__, url_prefix="/inventory")
@@ -210,7 +210,8 @@ def get_all_products():
 
 @inventory.route("/<int:id>", methods=["PATCH"])
 @requires_access_level(["UPDATE"])
-def update_product(id):
+
+def patch_product(id):
     """Example endpoint PATH in the database an inventory
     This is using docstrings for specifications.
     ---
@@ -273,10 +274,10 @@ def update_product(id):
     """
     if id is None or id == 0 or not request.json:
         abort(400)
-  
     data = request.get_json()
-    product.update(data)
-
-    product = inventory_share_schema.dump(product)
-
-    return jsonify({"status": "Produto atualizado com sucesso!", "Dados": product}), 204
+    result = update_product(data, id)
+    
+    if "error" in result:
+        return jsonify(result), 400
+    
+    return jsonify({"status": "Produto atualizado com sucesso!", "Dados": result}), 204
