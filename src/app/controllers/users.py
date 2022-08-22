@@ -121,8 +121,8 @@ def callback():
     email = user_google_dict["email"]
     name = user_google_dict["name"]
     user = get_user_by_email(email)
-
-    if 'error' in user:
+    
+    if 'error' in user or user is None:
         new_user = {
             'city_id':1,
             'gender_id':1,
@@ -139,7 +139,7 @@ def callback():
             'landmark':None,
             'number_street':None
         }
-        user = create_user(new_user)
+        user = create_user(new_user, validate=False)
     
     user_google_dict["user_id"] = user['id']
     user_google_dict["roles"] = user['id']
