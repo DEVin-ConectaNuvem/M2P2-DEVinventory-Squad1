@@ -40,18 +40,20 @@ Executar o comando: <i>poetry run flask run</i>
 
 # Criar tabelas no banco:
 
-<i>poetry run flask db init</i>
-<i>poetry run flask db migrate</i>
-<i>poetry run flask db upgrade</i>
+<ul>
+<li><i>poetry run flask db init</i></li>
+<li><i>poetry run flask db migrate</i></li>
+<li><i>poetry run flask db upgrade</i></li>
+</ul>
 
 # Popular as tabelas do database:
 
-<i>poetry run flask populate_db</i>
+* <i>poetry run flask populate_db</i>
 
 
 # Endpoints:
 
-<>INVENTORY</b>
+<b>INVENTORY</b>
 
 
 <b style="font-size:30px">POST/inventory/create</b>
