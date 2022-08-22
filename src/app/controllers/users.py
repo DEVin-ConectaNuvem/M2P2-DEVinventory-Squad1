@@ -118,17 +118,18 @@ def callback():
         request=token_google,
         audience=current_app.config["GOOGLE_CLIENT_ID"],
     )
+    email = user_google_dict["email"]
+    name = user_google_dict["name"]
+    user = get_user_by_email(email)
 
-    user = get_user_by_email(user_google_dict["email"])
-
-    if "error" in user:
+    if 'error' in user:
         new_user = {
             'city_id':1,
             'gender_id':1,
             'role_id':3,
-            'name':user_google_dict["name"],
+            'name':name,
             'age':None,
-            'email':user_google_dict["email"],
+            'email':email,
             'phone':None,
             'password':'senha123',
             'cep':None,
@@ -140,8 +141,8 @@ def callback():
         }
         user = create_user(new_user)
     
-    user_google_dict["user_id"] = user["id"]
-    user_google_dict["roles"] = user["roles"]
+    user_google_dict["user_id"] = user['id']
+    user_google_dict["roles"] = user['id']
     session["google_id"] = user_google_dict.get("sub")
     del user_google_dict["aud"]
     del user_google_dict["azp"]
