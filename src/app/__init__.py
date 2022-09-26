@@ -1,5 +1,3 @@
-import os
-
 from flask import Flask
 from flask_cors import CORS
 from flask_marshmallow import Marshmallow
@@ -12,11 +10,11 @@ from src.app.swagger import create_swagger
 DB = SQLAlchemy()
 MA = Marshmallow()
 
-def create_app():
+def create_app(environment):
 
   app = Flask(__name__)
 
-  app.config.from_object(app_config[os.getenv('FLASK_ENV')])
+  app.config.from_object(app_config[environment])
   DB.init_app(app)
   MA.init_app(app)
   Migrate(app=app, db=DB, directory='./src/app/migrations')
